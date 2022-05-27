@@ -2,6 +2,12 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_timer.h>
 #include "Game.h"
+
+#include "ecs/ecs.h"
+#include "ecs/Entity.h"
+#include "ecs/Manager.h"
+#include "sdlutils/InputHandler.h"
+#include "sdlutils/SDLUtils.h"
 Game::Game(){
 
 }
