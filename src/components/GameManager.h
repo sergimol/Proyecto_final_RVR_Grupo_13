@@ -49,6 +49,7 @@ public:
 		
 	}
 
+	// Genera un nuevo mazo barajado
 	void generaBaraja()
 	{
 		// Creamos la baraja en un vector
@@ -67,7 +68,7 @@ public:
 				nuevaCarta.num = j;
 				nuevaCarta.descubierta = false;
 
-				// Añadimos la carta a la baraja auxiliar
+				// Aï¿½adimos la carta a la baraja auxiliar
 				barajaAux.push_back(nuevaCarta);
 			}
 		}
@@ -79,7 +80,7 @@ public:
 			// Elegimos un indice aleatorio
 			int indiceRandom = sdlutils().rand().nextInt(0, indicesRestantes);
 
-			// Añadimos la carta a la baraja buena
+			// Anadimos la carta a la baraja buena
 			baraja.push(barajaAux[indiceRandom]);
 
 			// Eliminamos la carta de la baraja auxiliar y restamos los indices
@@ -114,6 +115,21 @@ public:
 				baraja.pop();
 			}
 		}
+	}
+
+	// Vacia la baraja para una nueva partida o lo quesea
+	void limpiarBaraja()
+	{
+		while(!baraja.empty())
+			baraja.pop();
+	}
+
+	// Devuelve al jugador que lo pida, la siguiente carta del mazo
+	Carta getCarta()
+	{
+		Carta c = baraja.top();
+		baraja.pop();
+		return c;
 	}
 
 private:
