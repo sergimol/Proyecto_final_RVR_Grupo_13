@@ -9,19 +9,10 @@
 #include "../ecs/Component.h"
 #include "../sdlutils/SDLUtils.h"
 
+#include "Carta.h"
+
 class Transform;
 using namespace std;
-
-enum Palo
-{
-	DIAMANTES, CORAZONES, TREBOLES, PICAS
-};
-struct Carta
-{
-	Palo palo;
-	int num;
-	bool descubierta;
-};
 
 //MANEJA LOS ESTADOS DEL JUEGO
 class GameManager : public Component {
@@ -59,16 +50,12 @@ public:
 		// Por palo
 		for (int i = 0; i < NUM_PALOS; i++)
 		{
-			Carta nuevaCarta;
-			nuevaCarta.palo = Palo(i);
-
 			// Por numero
 			for (int j = 1; j <= NUM_CARTAS/NUM_PALOS; j++)
 			{
-				nuevaCarta.num = j;
-				nuevaCarta.descubierta = false;
+				Carta nuevaCarta(Palo(i), j);
 
-				// A�adimos la carta a la baraja auxiliar
+				// Añadimos la carta a la baraja auxiliar
 				barajaAux.push_back(nuevaCarta);
 			}
 		}
@@ -90,7 +77,7 @@ public:
 		}
 
 		// Debug
-		if (debug)
+		/*if (debug)
 		{
 			for (int i = 0; i < NUM_CARTAS; i++)
 			{
@@ -114,7 +101,7 @@ public:
 
 				baraja.pop();
 			}
-		}
+		}*/
 	}
 
 	// Vacia la baraja para una nueva partida o lo quesea
