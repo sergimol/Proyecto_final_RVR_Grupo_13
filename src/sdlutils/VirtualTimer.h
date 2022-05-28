@@ -1,7 +1,7 @@
 #ifndef VIRTUAL_TIMER_H_
 #define VIRTUAL_TIMER_H_
 
-#include <SDL.h>
+#include "SDL2/SDL.h"
 #include <cassert>
 
 class VirtualTimer {
