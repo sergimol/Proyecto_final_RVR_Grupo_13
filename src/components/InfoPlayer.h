@@ -50,8 +50,6 @@ public:
 	void robarCarta()
 	{
 		// Llamar al GM y robar carta
-		Carta a;
-
 
 	}
 	
