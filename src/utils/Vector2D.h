@@ -1,6 +1,8 @@
-#ifndef VECTOR2D_H_
-#define VECTOR2D_H_
+// This file is part of the course TPV2@UCM - Samir Genaim
 
+#pragma once
+
+#include <cassert>
 #include <cmath>
 #include <ostream>
 
@@ -19,19 +21,15 @@ public:
 			x_(), y_() {
 	}
 
-	Vector2D(const Vector2D &v) :
+	Vector2D(const Vector2D &v) noexcept :
 			x_(v.getX()), y_(v.getY()) {
 	}
 
-	Vector2D(Vector2D &&v) :
+	Vector2D(Vector2D &&v) noexcept :
 			x_(v.getX()), y_(v.getY()) {
 	}
 
-	Vector2D(const Vector2D *v) :
-			x_(v->getX()), y_(v->getY()) {
-	}
-
-	Vector2D(float x, float y) :
+	Vector2D(float x, float y) noexcept :
 			x_(x), y_(y) {
 	}
 
@@ -66,29 +64,25 @@ public:
 		y_ = v.y_;
 	}
 
-	inline void set(const Vector2D &&v) {
-		x_ = v.x_;
-		y_ = v.y_;
-	}
-
-	inline void set(const Vector2D *v) {
-		x_ = v->x_;
-		y_ = v->y_;
-	}
-
 	// copy assignment
-	inline Vector2D& operator=(const Vector2D &v) {
+	inline Vector2D& operator=(const Vector2D &v) noexcept {
 		x_ = v.x_;
 		y_ = v.y_;
 		return *this;
 	}
 
-	// move assignment - not really needed
-	inline Vector2D& operator=(const Vector2D &&v) {
-		x_ = v.x_;
-		y_ = v.y_;
-		return *this;
+	// v[0] is the first coordinate and v[1] is the second
+	inline float& operator[](int i) noexcept {
+		assert(i == 0 || i == 1);
+		return i == 0 ? x_ : y_;
 	}
+
+	// v[0] is the first coordinate and v[1] is the second
+	inline const float& operator[](int i) const noexcept {
+		assert(i == 0 || i == 1);
+		return i == 0 ? x_ : y_;
+	}
+
 
 	// ** various operations
 
@@ -105,14 +99,14 @@ public:
 	// counter clockwise rotation in a normal coordinate system, and
 	// it is clockwise rotation if we work with a coordinate system
 	// in which the vertical axe is flipped (it is like a mirror over
-	// the horizontal axe)-- which the case when working with the SDL.
+	// the horizontal axe) -- which the case when working with SDL.
 	//
 	Vector2D rotate(float degrees) const;
 
 	// Computes the angle between 'this' and 'v'. The result is
 	// between -180 and 180, and is such that the following holds:
 	//
-	//   this->rotate(angle) == v
+	//   this->rotate(angle).normalize() == v.normalize()
 	//
 	float angle(const Vector2D &v) const;
 
@@ -146,7 +140,6 @@ private:
 	float y_;  // second coordinate
 };
 
-// needed for printing a value of tyep Vector2D with std::cout.
+// needed for printing a value of type Vector2D with std::cout.
 // The definition is in .cpp
 std::ostream& operator<<(std::ostream &os, const Vector2D &v);
-#endif

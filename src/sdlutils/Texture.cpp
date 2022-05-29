@@ -23,21 +23,20 @@ Texture::Texture(Texture &&other) noexcept {
 
 Texture::Texture(SDL_Renderer *renderer, const std::string &fileName) {
 	assert(renderer != nullptr);
+	renderer_ = renderer;
 
 	SDL_Surface *surface = IMG_Load(fileName.c_str());
 	if (surface == nullptr)
 		throw "Couldn't load image: " + fileName;
 
-	texture_ = SDL_CreateTextureFromSurface(renderer, surface);
-	if (texture_ == nullptr) {
-		SDL_FreeSurface(surface);
-		throw "Couldn't load image: " + fileName;
-	}
-
 	width_ = surface->w;
 	height_ = surface->h;
-	renderer_ = renderer;
 
+	texture_ = SDL_CreateTextureFromSurface(renderer, surface);
+	SDL_FreeSurface(surface);
+
+	if (texture_ == nullptr)
+		throw "Couldn't convert surface to texture for image: " + fileName;
 }
 
 Texture::Texture(SDL_Renderer *renderer, const std::string &text,
@@ -52,7 +51,9 @@ Texture::Texture(SDL_Renderer *renderer, const std::string &text,
 
 void Texture::constructFromText(SDL_Renderer *renderer, const std::string &text,
 		const Font &font, const SDL_Color *fgColor, const SDL_Color *bgColor) {
+
 	assert(renderer != nullptr);
+	renderer_ = renderer;
 
 	SDL_Surface *textSurface =
 			bgColor == nullptr ?
@@ -60,16 +61,14 @@ void Texture::constructFromText(SDL_Renderer *renderer, const std::string &text,
 					font.renderText(text, *fgColor, *bgColor);
 
 	if (textSurface == nullptr)
-		throw "Couldn't create text: " + text;
-
-	texture_ = SDL_CreateTextureFromSurface(renderer, textSurface);
-	if (texture_ == nullptr) {
-		SDL_FreeSurface(textSurface);
-		throw "Couldn't create text: " + text;
-	}
+		throw "Couldn't create surface for text: " + text;
 
 	width_ = textSurface->w;
 	height_ = textSurface->h;
-	renderer_ = renderer;
 
+	texture_ = SDL_CreateTextureFromSurface(renderer, textSurface);
+	SDL_FreeSurface(textSurface);
+
+	if (texture_ == nullptr)
+		throw "Couldn't create texture for text: " + text;
 }

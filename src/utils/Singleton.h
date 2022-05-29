@@ -69,7 +69,7 @@ public:
 	//
 	inline static T* instance() {
 		// you can replace the "if" by assert(instance_.get() != nullptr)
-		// to force initialisation at the beginning
+		// to force initialization at the beginning
 		//
 		if (instance_.get() == nullptr) {
 			init();

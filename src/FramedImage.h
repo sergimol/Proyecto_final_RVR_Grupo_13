@@ -17,7 +17,7 @@ public:
 
 	virtual ~FramedImage() {}
 
-	void init() override {
+	/*void init() override {
 		tr_ = entity_->getComponent<Transform>();
 		assert(tr_ != nullptr);
 	}
@@ -44,7 +44,7 @@ public:
 
 		SDL_Rect dest = build_sdlrect(tr_->getPos(), tr_->getW(), tr_->getH());
 		tex_->render(src_, dest, tr_->getRot());
-	}
+	}*/
 
 private:
 	Transform* tr_;
