@@ -9,19 +9,10 @@
 #include "../ecs/Component.h"
 #include "../sdlutils/SDLUtils.h"
 
+#include "Carta.h"
+
 class Transform;
 using namespace std;
-
-enum Palo
-{
-	DIAMANTES, CORAZONES, TREBOLES, PICAS
-};
-struct Carta
-{
-	Palo palo;
-	int num;
-	bool descubierta;
-};
 
 //MANEJA LOS ESTADOS DEL JUEGO
 class GameManager : public Component {
@@ -49,6 +40,7 @@ public:
 		
 	}
 
+	// Genera un nuevo mazo barajado
 	void generaBaraja()
 	{
 		// Creamos la baraja en un vector
@@ -58,16 +50,12 @@ public:
 		// Por palo
 		for (int i = 0; i < NUM_PALOS; i++)
 		{
-			Carta nuevaCarta;
-			nuevaCarta.palo = Palo(i);
-
 			// Por numero
 			for (int j = 1; j <= NUM_CARTAS/NUM_PALOS; j++)
 			{
-				nuevaCarta.num = j;
-				nuevaCarta.descubierta = false;
+				Carta nuevaCarta(Palo(i), j);
 
-				// Añadimos la carta a la baraja auxiliar
+				// AÃ±adimos la carta a la baraja auxiliar
 				barajaAux.push_back(nuevaCarta);
 			}
 		}
@@ -79,7 +67,7 @@ public:
 			// Elegimos un indice aleatorio
 			int indiceRandom = sdlutils().rand().nextInt(0, indicesRestantes);
 
-			// Añadimos la carta a la baraja buena
+			// Anadimos la carta a la baraja buena
 			baraja.push(barajaAux[indiceRandom]);
 
 			// Eliminamos la carta de la baraja auxiliar y restamos los indices
@@ -89,7 +77,7 @@ public:
 		}
 
 		// Debug
-		if (debug)
+		/*if (debug)
 		{
 			for (int i = 0; i < NUM_CARTAS; i++)
 			{
@@ -113,7 +101,22 @@ public:
 
 				baraja.pop();
 			}
-		}
+		}*/
+	}
+
+	// Vacia la baraja para una nueva partida o lo quesea
+	void limpiarBaraja()
+	{
+		while(!baraja.empty())
+			baraja.pop();
+	}
+
+	// Devuelve al jugador que lo pida, la siguiente carta del mazo
+	Carta getCarta()
+	{
+		Carta c = baraja.top();
+		baraja.pop();
+		return c;
 	}
 
 private:

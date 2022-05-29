@@ -1,5 +1,6 @@
 #include <vector>
 #include <SDL2/SDL.h>
+#include "ecs/Manager.h"
 
 class GameObject;
 class SDL_Renderer;
@@ -11,11 +12,5 @@ public:
      void init(int w, int h);
      void start();
 private:
-    std::vector<GameObject*> objs_;
-    SDL_Renderer* rend;
-    SDL_Window* win;
-    SDL_Texture* tex;
-    bool close = false;
-    int width_, height_;
-    SDL_Rect dest;
+    std::unique_ptr<Manager> mngr_;
 };
