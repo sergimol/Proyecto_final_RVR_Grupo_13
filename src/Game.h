@@ -1,5 +1,4 @@
 #include <SDL2/SDL.h>
-#include "ecs/Manager.h"
 #include <stack>
 
 using namespace std;
@@ -23,8 +22,6 @@ public:
 	void generaBaraja();
 
 private:
-    std::unique_ptr<Manager> mngr_;
-
     const int NUM_CARTAS = 52;
 	const int NUM_PALOS = 4;
 	stack<Carta> baraja;

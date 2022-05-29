@@ -1,12 +1,11 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "ecs/Component.h"
-#include "components/Carta.h"
+#include "Carta.h"
 #include "Game.h"
 #include "sdlutils/InputHandler.h"
 
-class Player : public Component {
+class Player {
 public:
     Player(int n, Game* j) : numero(n), juego(j) {};
 

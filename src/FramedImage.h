@@ -1,13 +1,11 @@
 #ifndef FRAMED_IMAGE_H_
 #define FRAMED_IMAGE_H_
 
-#include "../ecs/Component.h"
-#include "../ecs/Entity.h"
-#include "../sdlutils/Texture.h"
+#include "sdlutils/Texture.h"
 
 #include "Transform.h"
 
-class FramedImage : public Component {
+class FramedImage {
 public:
 	FramedImage(Texture* tex, int rows, int cols) : tr_(nullptr), tex_(tex), rows_(rows),
 		cols_(cols), actRow_(0), actCol_(0), lastUpdate(0) {

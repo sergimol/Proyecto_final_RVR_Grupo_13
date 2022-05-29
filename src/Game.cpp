@@ -3,18 +3,14 @@
 #include <SDL2/SDL_timer.h>
 #include "Game.h"
 
-#include "ecs/ecs.h"
-#include "ecs/Entity.h"
-#include "ecs/Manager.h"
 #include "sdlutils/InputHandler.h"
 #include "sdlutils/SDLUtils.h"
-#include "components/Carta.h"
+#include "Carta.h"
 
 #include <vector>
 
 Game::Game() 
 {
-    mngr_.reset(new Manager());
 }
 
 Game::~Game(){
@@ -49,11 +45,11 @@ void Game::start()
             continue;
         }
 
-        mngr_->update();
-        mngr_->refresh();
+        //mngr_->update();
+        //mngr_->refresh();
 
         sdlutils().clearRenderer();
-        mngr_->render();
+        //mngr_->render();
         sdlutils().presentRenderer();
 
         Uint32 frameTime = sdlutils().currRealTime() - startTime;

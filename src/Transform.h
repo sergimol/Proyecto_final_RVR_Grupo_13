@@ -1,11 +1,9 @@
 #ifndef TRANSFORM_H_
 #define TRANSFORM_H_
 
-#include "../ecs/Component.h"
+#include "utils/Vector2D.h"
 
-#include "../utils/Vector2D.h"
-
-class Transform : public Component {
+class Transform {
 public:
 	Transform() : pos_(), vel_(), width_(), height_(), rotation_() {}
 
@@ -30,7 +28,7 @@ public:
 
 	inline void setRot(float rot) { rotation_ = rot; }
 
-	void update() override { pos_ = pos_ + vel_; }
+	//void update() override { pos_ = pos_ + vel_; }
 
 private:
 	Vector2D pos_;

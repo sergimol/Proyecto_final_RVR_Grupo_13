@@ -1,15 +1,14 @@
 #ifndef CARTA_H
 #define CARTA_H
 
-#include "../ecs/Component.h"
-#include "../sdlutils/SDLUtils.h"
+#include "sdlutils/SDLUtils.h"
 
 enum Palo
 {
 	DIAMANTES, CORAZONES, TREBOLES, PICAS
 };
 
-class Carta : public Component {
+class Carta {
 
 public:
 	Carta(Palo p, int v){
