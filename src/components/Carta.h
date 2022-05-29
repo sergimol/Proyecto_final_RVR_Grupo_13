@@ -15,10 +15,10 @@ public:
 	Carta(Palo p, int v){
 		palo = p;
 		valor = v;
-	};
+	}
 
-	Palo getPalo() { return palo; };
-	int getValor() { return valor; };
+	Palo getPalo() { return palo; }
+	int getValor() { return valor; }
 
 private:
 	Palo palo;

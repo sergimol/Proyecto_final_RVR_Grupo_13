@@ -12,7 +12,7 @@
 
 #include <vector>
 
-Game::Game()
+Game::Game() 
 {
     mngr_.reset(new Manager());
 }
