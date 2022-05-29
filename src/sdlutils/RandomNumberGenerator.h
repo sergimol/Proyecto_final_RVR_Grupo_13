@@ -1,12 +1,19 @@
-#ifndef RANDOM_NUMBER_GENERATOR_H_
-#define RANDOM_NUMBER_GENERATOR_H_
+// This file is part of the course TPV2@UCM - Samir Genaim
+
+#pragma once
 
 #include <cassert>
 #include <ctime>
 #include <random>
 
+#include "RandomNumberGenerator.h"
+
 class RandomNumberGenerator {
 public:
+
+	RandomNumberGenerator(const RandomNumberGenerator&) = delete;
+	RandomNumberGenerator& operator=(RandomNumberGenerator&) = delete;
+
 	RandomNumberGenerator() :
 		RandomNumberGenerator(static_cast<unsigned int>(std::time(0))) {
 	}
@@ -29,8 +36,8 @@ public:
 	}
 
 private:
-
 	std::mt19937 gen_;
 	std::uniform_int_distribution<int> dist_;
+
 };
-#endif
+

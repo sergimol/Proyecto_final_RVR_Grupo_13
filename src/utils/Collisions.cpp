@@ -1,7 +1,9 @@
+// This file is part of the course TPV2@UCM - Samir Genaim
+
 #include "Collisions.h"
 
-bool Collisions::collidesWithRotation(const Vector2D o1Pos, float o1Width,
-		float o1Height, float o1Rot, const Vector2D o2Pos, float o2Width,
+bool Collisions::collidesWithRotation(const Vector2D &o1Pos, float o1Width,
+		float o1Height, float o1Rot, const Vector2D &o2Pos, float o2Width,
 		float o2Height, float o2Rot) {
 	Vector2D Ac = o1Pos + Vector2D(o1Width / 2.0f, o1Height / 2.0f);
 
@@ -39,9 +41,8 @@ bool Collisions::collidesWithRotation(const Vector2D o1Pos, float o1Width,
 			|| PointInRectangle(Blu, Bru, Bll, Brl, Arl);
 }
 
-
-bool Collisions::PointInRectangle(Vector2D A, Vector2D B, Vector2D C,
-		Vector2D D, Vector2D P) {
+bool Collisions::PointInRectangle(const Vector2D &A, const Vector2D &B,
+		const Vector2D &C, const Vector2D &D, const Vector2D &P) {
 	if (PointInTriangle(A, B, C, P))
 		return true;
 	if (PointInTriangle(A, C, D, P))
@@ -49,8 +50,8 @@ bool Collisions::PointInRectangle(Vector2D A, Vector2D B, Vector2D C,
 	return false;
 }
 
-bool Collisions::PointInTriangle(Vector2D A, Vector2D B, Vector2D C,
-		Vector2D P) {
+bool Collisions::PointInTriangle(const Vector2D &A, const Vector2D &B,
+		const Vector2D &C, const Vector2D &P) {
 
 	// Compute vectors
 	Vector2D v0 = C - A;
@@ -77,8 +78,8 @@ bool Collisions::PointInTriangle(Vector2D A, Vector2D B, Vector2D C,
 	}
 }
 
-bool Collisions::collides(Vector2D o1Pos, float o1Width, float o1Height,
-		Vector2D o2Pos, float o2Width, float o2Height) {
+bool Collisions::collides(const Vector2D &o1Pos, float o1Width, float o1Height,
+		const Vector2D &o2Pos, float o2Width, float o2Height) {
 
 	// o1 completely to the left of o2, or vice versa
 	if (o1Pos.getX() + o1Width < o2Pos.getX()
