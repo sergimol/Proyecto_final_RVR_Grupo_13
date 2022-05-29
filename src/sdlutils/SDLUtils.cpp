@@ -2,7 +2,7 @@
 
 #include <cassert>
 
-#include "../json/JSON.h"
+//#include "../json/JSON.h"
 
 SDLUtils::SDLUtils() :
 		SDLUtils("SDL Demo", 600, 400) {
@@ -20,7 +20,7 @@ SDLUtils::SDLUtils(std::string windowTitle, int width, int height) :
 SDLUtils::SDLUtils(std::string windowTitle, int width, int height,
 		std::string filename) :
 		SDLUtils(windowTitle, width, height) {
-	loadReasources(filename);
+	//loadReasources(filename);
 }
 
 SDLUtils::~SDLUtils() {
@@ -78,7 +78,7 @@ void SDLUtils::initSDLExtensions() {
 
 }
 
-void SDLUtils::loadReasources(std::string filename) {
+/*void SDLUtils::loadReasources(std::string filename) {
 	// TODO check the correctness of values and issue a corresponding
 	// exception. Now we just do some simple checks, and assume input
 	// is correct.
@@ -213,7 +213,7 @@ void SDLUtils::loadReasources(std::string filename) {
 	}
 
 	delete jAux;
-}
+}*/
 
 void SDLUtils::closeSDLExtensions() {
 

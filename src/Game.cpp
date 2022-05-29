@@ -1,7 +1,7 @@
+#include "Player.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_timer.h>
-#include "Game.h"
 
 #include "sdlutils/InputHandler.h"
 #include "sdlutils/SDLUtils.h"
@@ -24,6 +24,11 @@ void Game::init(int w, int h)
     "resources/config/resources.json");
 
     generaBaraja();    
+
+    player1 = new Player(1, this);
+    player1->setTurno(true);
+    player2 = new Player(2, this);
+    player2->setTurno(false);
 }
 
 void Game::start()
@@ -45,8 +50,8 @@ void Game::start()
             continue;
         }
 
-        //mngr_->update();
-        //mngr_->refresh();
+        // UPDATE DE LAS COSAS
+        update();
 
         sdlutils().clearRenderer();
         //mngr_->render();
@@ -57,6 +62,22 @@ void Game::start()
         if(frameTime < 20)
             SDL_Delay(20 - frameTime);
     }
+}
+
+void Game::update()
+{
+    // TURNOS
+    // JUGADOR 1
+    if(player1->sigueJugando())
+    {
+        player1->procesaTurno();
+    }
+    // JUGADOR 2
+    else
+    {
+        player2->procesaTurno();
+    }
+    
 }
 
 Carta Game::getCarta()
