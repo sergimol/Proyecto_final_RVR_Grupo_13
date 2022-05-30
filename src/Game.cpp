@@ -56,11 +56,12 @@ void Game::start()
         // UPDATE DE LAS COSAS
         //update();
 
+        sdlutils().clearRenderer();
+        
         // RENDER DE LAS COSAS
         render();
 
 
-        sdlutils().clearRenderer();
         //mngr_->render();
         sdlutils().presentRenderer();
 

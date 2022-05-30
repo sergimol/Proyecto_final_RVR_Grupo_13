@@ -4,6 +4,7 @@
 #include "Carta.h"
 #include "Game.h"
 #include "sdlutils/InputHandler.h"
+#include <vector>
 
 class Player {
 public:
@@ -43,6 +44,7 @@ public:
     bool sigueJugando() { return !plantado; }
 
     int getPuntos() { return puntos; }
+    
 private:
     Game* juego;
     int numero;
