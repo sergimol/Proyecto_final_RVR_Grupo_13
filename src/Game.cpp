@@ -27,11 +27,11 @@ void Game::init(int w, int h)
 
     player1 = new Player(1, this);
     player2 = new Player(2, this);
-    Texture* carbalo = &sdlutils().images().at("setCartas");
+    /*Texture* carbalo = &sdlutils().images().at("setCartas");
     carta = new Carta(CORAZONES, 5, carbalo, carbalo,
     Vector2D(sdlutils().width()/2, sdlutils().height()/2),
-    Vector2D(50.0f,50.0f),
-    0.0f);
+    Vector2D(100.0f,150.0f),
+    0.0f);*/
 }
 
 void Game::start()
@@ -113,7 +113,9 @@ void Game::finDePartida()
 
 void Game::render()
 {
-    carta->render();
+    //carta->render();
+    player1->render();
+    player2->render();
 }
 
 Carta Game::getCarta()
