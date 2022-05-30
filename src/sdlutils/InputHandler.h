@@ -4,7 +4,7 @@
 #include <iostream>
 #include <SDL2/SDL.h>
 #include <array>
-
+#include <vector>
 #include "../utils/Singleton.h"
 
 // Instead of a Singleton class, we could make it part of
@@ -32,6 +32,7 @@ public:
 		isMouseButtonDownEvent_ = false;
 
 		isMouseMotionEvent_ = false;
+		flushInput();
 	}
 
 	// update the state with a new event
@@ -84,11 +85,15 @@ public:
 	}
 
 	inline bool isKeyDown(SDL_Scancode key) {
-		return kbState_[key] == 1;
+		return keyDownEvent() && kbState_[key] == 1;
 	}
 
 	inline bool isKeyDown(SDL_Keycode key) {
 		return isKeyDown(SDL_GetScancodeFromKey(key));
+	}
+
+	inline bool getKeyDown(SDL_Scancode key) {
+		return keys_[key].down_;
 	}
 
 	inline bool isKeyUp(SDL_Scancode key) {
@@ -134,12 +139,24 @@ private:
 		clearState();
 	}
 
-	inline void onKeyDown(const SDL_Event&) {
+	inline void onKeyDown(const SDL_Event& event) {
 		isKeyDownEvent_ = true;
+		SDL_Scancode code = event.key.keysym.scancode;
+		if(!keys_[code].pressed_) {
+			keys_[code].down_ = true;
+			keys_[code].pressed_ = true;
+			keys_[code].up_ = false;
+			keyDownsToFlush.push_back(code);
+		}
 	}
 
-	inline void onKeyUp(const SDL_Event&) {
+	inline void onKeyUp(const SDL_Event& event) {
 		isKeyUpEvent_ = true;
+		SDL_Scancode code = event.key.keysym.scancode;
+		keys_[code].down_ = false;
+		keys_[code].pressed_ = false;
+		keys_[code].up_ = true;
+		keyUpsToFlush.push_back(code);
 	}
 
 	inline void onMouseMotion(const SDL_Event &event) {
@@ -193,6 +210,16 @@ private:
 		}
 	}
 
+	inline void flushInput()
+	{
+		for (int c : keyUpsToFlush)
+			keys_[c].up_ = false;
+		keyUpsToFlush.clear();
+		for (int c : keyDownsToFlush)
+			keys_[c].down_ = false;
+		keyDownsToFlush.clear();
+	}
+
 	bool isCloseWindoEvent_;
 	bool isKeyUpEvent_;
 	bool isKeyDownEvent_;
@@ -202,6 +229,17 @@ private:
 	std::pair<Sint32, Sint32> mousePos_;
 	std::array<bool, 3> mbState_;
 	const Uint8 *kbState_;
+
+	struct KeyState {
+		bool down_ = false;
+		bool pressed_ = false;
+		bool up_ = false;
+	};
+
+	KeyState keys_[SDL_NUM_SCANCODES];
+
+	std::vector<int> keyUpsToFlush;
+	std::vector<int> keyDownsToFlush;
 }
 ;
 

@@ -9,12 +9,12 @@
 
 bool Player::procesaTurno()
 {
-    if(ih().isKeyDown(SDLK_SPACE))
+    if(ih().getKeyDown(SDL_SCANCODE_SPACE))
     {
         pideCarta();
         //std::cout << "nova";
     }
-    else if(ih().isKeyDown(SDLK_r))
+    else if(ih().getKeyDown(SDL_SCANCODE_R))
     {
         plantado = true;
         enTurno = false;
