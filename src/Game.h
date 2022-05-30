@@ -26,6 +26,8 @@ public:
     // Update de todos los componentes
     void update();
 
+    // Comprobaciones al terminar una partida
+    void finDePartida();
 private:
     const int NUM_CARTAS = 52;
 	const int NUM_PALOS = 4;

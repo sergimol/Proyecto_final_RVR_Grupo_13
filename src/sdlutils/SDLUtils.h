@@ -1,8 +1,8 @@
 // This file is part of the course TPV2@UCM - Samir Genaim
+#ifndef SDL_UTILS_H
+#define SDL_UTILS_H
 
-#pragma once
-
-#include <SDL.h>
+#include <SDL2/SDL.h>
 #include <string>
 #include <unordered_map>
 
@@ -211,3 +211,5 @@ private:
 inline SDLUtils& sdlutils() {
 	return *SDLUtils::instance();
 }
+
+#endif
