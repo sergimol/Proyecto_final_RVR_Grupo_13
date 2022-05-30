@@ -28,9 +28,10 @@ void Game::init(int w, int h)
 
     player1 = new Player(1, this);
     player2 = new Player(2, this);
+    player1->reset(-1);
+    player2->reset(-2);
     cartaTexture = &sdlutils().images().at("setCartas");
     generaBaraja();    
-
 }
 
 void Game::start()

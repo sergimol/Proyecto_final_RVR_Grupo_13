@@ -30,6 +30,9 @@ void Player::reset(int ganador)
     plantado = false;
     if(ganador == numero)
         victorias++;
+    pideCarta();
+    pideCarta();
+    enTurno = true;
 }
 
 void Player::render()
@@ -45,13 +48,17 @@ void Player::pideCarta()
 {
     Carta* nueva = juego->getCarta();
 
-    puntos += nueva->getValor();
-    mano.push_back(nueva);
+    int valor = nueva.getValor();
+    if(valor > 10) valor = 10;
+    puntos += valor;
+    mano.push_back(nuevaFina);
 
     enTurno = false;
 
     if(puntos >= 21)
         plantado = true;
+
+    std::cout << numero << " " << puntos << std::endl;
 }
 
 
