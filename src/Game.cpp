@@ -25,13 +25,12 @@ void Game::init(int w, int h)
     SDLUtils::init("Jacobo Negro", 800, 600,
     "resources/config/resources.json");
 
-
     player1 = new Player(1, this);
     player2 = new Player(2, this);
-    player1->reset(-1);
-    player2->reset(-2);
     cartaTexture = &sdlutils().images().at("setCartas");
     generaBaraja();    
+    player1->reset(-1);
+    player2->reset(-2);
 }
 
 void Game::start()
@@ -120,9 +119,20 @@ void Game::render()
 
 Carta* Game::getCarta()
 {
-    Carta* c = baraja.top();
-    baraja.pop();
-    return c;
+    std::cout <<  "bro?";
+    if(!baraja.empty())
+    {
+        Carta* c = baraja.top();
+        baraja.pop();
+
+        if(!c)
+        std::cout <<  "me la he fumao";
+        else
+        std::cout << "no me la he fumao";
+        return c;
+    }
+    else
+        return nullptr;
 }
 
 void Game::limpiarBaraja()

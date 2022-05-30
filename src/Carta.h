@@ -30,6 +30,7 @@ public:
 
 	inline Palo getPalo(){return palo;};
 	inline int getValor(){return valor;};
+	inline miTransform getTransform(){return tr;};
 
 private:
 	Palo palo;

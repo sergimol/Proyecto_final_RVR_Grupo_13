@@ -36,6 +36,7 @@ private:
     
 
     void pideCarta();
+    void colocaCartas(Carta* nuevaCarta);
 };
 
 #endif    

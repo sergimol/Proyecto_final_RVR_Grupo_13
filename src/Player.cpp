@@ -47,11 +47,12 @@ void Player::render()
 void Player::pideCarta()
 {
     Carta* nueva = juego->getCarta();
+    colocaCartas(nueva);
 
-    int valor = nueva.getValor();
+    int valor = nueva->getValor();
     if(valor > 10) valor = 10;
     puntos += valor;
-    mano.push_back(nuevaFina);
+    mano.push_back(nueva);
 
     enTurno = false;
 
@@ -59,6 +60,33 @@ void Player::pideCarta()
         plantado = true;
 
     std::cout << numero << " " << puntos << std::endl;
+}
+
+void Player::colocaCartas(Carta* nuevaCarta)
+{
+    // SI ES JUGADOR 1
+    if(numero == 1)
+    {
+        // Colocamos la carta actual en el medio
+        nuevaCarta->getTransform().pos = Vector2D(sdlutils().width()/2, sdlutils().height()/2 - (sdlutils().height()/2)/2);
+
+        //Desplazamos el vector de cartas a la izquierda
+        for(Carta* c : mano)
+        {
+            c->getTransform().pos = Vector2D(c->getTransform().pos.getX() - 100,  c->getTransform().pos.getY());
+        }
+    }
+    else
+    {
+        // Colocamos la carta actual en el medio
+        nuevaCarta->getTransform().pos = Vector2D(sdlutils().width()/2, sdlutils().height()/2 + (sdlutils().height()/2)/2);
+
+        //Desplazamos el vector de cartas a la izquierda
+        for(Carta* c : mano)
+        {
+            c->getTransform().pos = Vector2D(c->getTransform().pos.getX() - 100,  c->getTransform().pos.getY());
+        }
+    }
 }
 
 
