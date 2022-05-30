@@ -1,4 +1,4 @@
-#include "Player.h"
+#include "Game.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_timer.h>
@@ -6,6 +6,7 @@
 #include "sdlutils/InputHandler.h"
 #include "sdlutils/SDLUtils.h"
 #include "Carta.h"
+#include "Player.h"
 
 #include <vector>
 
@@ -54,14 +55,11 @@ void Game::start()
         }
 
         // UPDATE DE LAS COSAS
-        //update();
+        update();
 
-        sdlutils().clearRenderer();
-        
+        sdlutils().clearRenderer();        
         // RENDER DE LAS COSAS
         render();
-
-
         //mngr_->render();
         sdlutils().presentRenderer();
 
@@ -106,6 +104,9 @@ void Game::finDePartida()
 
     else if((puntos2 > puntos1 && puntos2 <= 21) || puntos1 > 21)
         ganador = 2;
+
+    limpiarBaraja();
+    generaBaraja();
 
     player1->reset(ganador);
     player2->reset(ganador);
