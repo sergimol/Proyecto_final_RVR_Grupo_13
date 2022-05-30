@@ -26,7 +26,7 @@ void Fondo::render()
     {
         Vector2D posCarta(sdlutils().width()/4*3 - sum, sdlutils().height()/4);
         auto w = barajaTex->width() / cols;
-        auto h = barajaTex->height() / fils;
+        auto h = barajaTex->height() / fils; 
         SDL_Rect src = { 0, 0, w, h };
         SDL_Rect destBaraja = build_sdlrect(posCarta, 200, 250);
         barajaTex->render(src, destBaraja, 0);
