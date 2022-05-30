@@ -2,15 +2,14 @@
 #include "sdlutils/Texture.h"
 #include "sdlutils/SDLUtils.h"
 #include "utils/Vector2D.h"
+#include "Game.h"
 
 
-Fondo::Fondo(Texture* t, Texture* b)
+Fondo::Fondo(Texture* t, Texture* b, Game* j)
 {
     fondoTex = t;
     barajaTex = b;
-    /*tr.pos = Vector2D(0,0);
-    tr.scale = Vector2D(sdlutils().width(), sdlutils().height());
-    tr.rot = 0;*/
+    juego = j;
 }
 
 void Fondo::render()
@@ -21,8 +20,18 @@ void Fondo::render()
     fondoTex->render(dest, 0);
 
     // BARAJA
-    Vector2D pos(sdlutils().width()/4*3, sdlutils().height()/2);
-    SDL_Rect dest = build_sdlrect(pos, 100, 150);
-    fondoTex->render(dest, 90);
+    int numCartas = juego->getNumCartas();
+    int sum = 0;
+    for(int i = 0; i < numCartas - 35; i++)
+    {
+        Vector2D posCarta(sdlutils().width()/4*3 - sum, sdlutils().height()/4);
+        auto w = barajaTex->width() / cols;
+        auto h = barajaTex->height() / fils;
+        SDL_Rect src = { 0, 0, w, h };
+        SDL_Rect destBaraja = build_sdlrect(posCarta, 200, 250);
+        barajaTex->render(src, destBaraja, 0);
+        sum+=5;
+    }
+    
 }
 

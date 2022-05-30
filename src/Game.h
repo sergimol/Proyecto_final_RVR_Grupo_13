@@ -39,6 +39,8 @@ public:
     Player* getPlayer1(){return player1;};
     Player* getPlayer2(){return player2;};
 
+    int getNumCartas(){return baraja.size();};
+
 private:
     const int NUM_CARTAS = 52;
 	const int NUM_PALOS = 4;
