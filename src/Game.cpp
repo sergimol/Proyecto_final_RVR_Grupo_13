@@ -29,6 +29,12 @@ void Game::init(int w, int h)
     player1->setTurno(true);
     player2 = new Player(2, this);
     player2->setTurno(false);
+
+    Texture* carbalo = &sdlutils().images().at("setCartas");
+    carta = new Carta(CORAZONES, 5, carbalo, carbalo,
+    Vector2D(sdlutils().width()/2, sdlutils().height()/2),
+    Vector2D(50.0f,50.0f),
+    0.0f);
 }
 
 void Game::start()
@@ -51,7 +57,11 @@ void Game::start()
         }
 
         // UPDATE DE LAS COSAS
-        update();
+        //update();
+
+        // RENDER DE LAS COSAS
+        render();
+
 
         sdlutils().clearRenderer();
         //mngr_->render();
@@ -78,6 +88,11 @@ void Game::update()
         player2->procesaTurno();
     }
     
+}
+
+void Game::render()
+{
+    carta->render();
 }
 
 Carta Game::getCarta()

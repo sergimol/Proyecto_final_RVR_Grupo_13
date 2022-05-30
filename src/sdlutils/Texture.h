@@ -54,8 +54,10 @@ public:
 	inline void render(const SDL_Rect &src, const SDL_Rect &dest, double angle,
 			const SDL_Point *p = nullptr,
 			SDL_RendererFlip flip = SDL_FLIP_NONE) {
+
 		assert(texture_ != nullptr);
 		SDL_RenderCopyEx(renderer_, texture_, &src, &dest, angle, p, flip);
+
 	}
 
 	// This rendering method corresponds to method SDL_RenderCopy.
@@ -64,10 +66,7 @@ public:
 	// It can be implemented by calling the previous render method as well,
 	// but we use SDL_RenderCopy directly since it does less checks so it
 	// saves some checks ...
-	inline void render(const SDL_Rect &src, const SDL_Rect &dest) {
-		assert(texture_ != nullptr);
-		SDL_RenderCopy(renderer_, texture_, &src, &dest);
-	}
+	void render(const SDL_Rect &src, const SDL_Rect &dest);
 
 	// render the complete texture at position (x,y).
 	inline void render(int x, int y) {

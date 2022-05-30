@@ -72,3 +72,19 @@ void Texture::constructFromText(SDL_Renderer *renderer, const std::string &text,
 	if (texture_ == nullptr)
 		throw "Couldn't create texture for text: " + text;
 }
+
+/*void Texture::render(const SDL_Rect &src, const SDL_Rect &dest, double angle,
+			const SDL_Point *p = nullptr,
+			SDL_RendererFlip flip = SDL_FLIP_NONE) {
+
+		std::cout << "Ey men";
+		assert(texture_ != nullptr);
+		SDL_RenderCopyEx(renderer_, texture_, &src, &dest, angle, p, flip);
+
+}*/
+void Texture::render(const SDL_Rect &src, const SDL_Rect &dest) {
+		std::cout << "Ey men";
+		assert(texture_ != nullptr);
+		SDL_RenderCopy(renderer_, texture_, &src, &dest);
+
+	}

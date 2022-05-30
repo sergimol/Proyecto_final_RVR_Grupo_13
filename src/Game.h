@@ -23,8 +23,11 @@ public:
     // Genera un nuevo mazo barajado
 	void generaBaraja();
 
-    // Update de todos los componentes
+    // Update de los objetos
     void update();
+
+    // Render de los objetos
+    void render();
 
 private:
     const int NUM_CARTAS = 52;
@@ -34,6 +37,8 @@ private:
 
     Player* player1;
     Player* player2;
+
+    Carta* carta;
 
     // TRUE = 1 FALSE = 2 
     bool turno;
