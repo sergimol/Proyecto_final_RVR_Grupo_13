@@ -7,12 +7,13 @@ Carta::Carta(Palo p, int v)
 	palo = p;
 	valor = v;
 }
-Carta::Carta(Palo p, int v, Texture* mt, Texture* rt, Vector2D ps, Vector2D sc, float r)
+Carta::Carta(Palo p, int v, Texture* mt, Texture* rt, Vector2D ps, Vector2D sc, float r, bool vi)
 {
 	palo = p;
 	valor = v;
 	muestraTex = mt;
 	ocultaTex = rt;
+	visible = v;
 
 	tr.pos = ps;
 	tr.scale = sc;

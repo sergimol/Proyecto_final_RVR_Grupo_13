@@ -4,6 +4,7 @@
 #include <SDL2/SDL_timer.h>
 
 #include "sdlutils/InputHandler.h"
+#include "sdlutils/Texture.h"
 #include "sdlutils/SDLUtils.h"
 #include "Carta.h"
 #include "Player.h"
@@ -24,15 +25,12 @@ void Game::init(int w, int h)
     SDLUtils::init("Jacobo Negro", 800, 600,
     "resources/config/resources.json");
 
-    generaBaraja();    
 
     player1 = new Player(1, this);
     player2 = new Player(2, this);
-    /*Texture* carbalo = &sdlutils().images().at("setCartas");
-    carta = new Carta(CORAZONES, 5, carbalo, carbalo,
-    Vector2D(sdlutils().width()/2, sdlutils().height()/2),
-    Vector2D(100.0f,150.0f),
-    0.0f);*/
+    cartaTexture = &sdlutils().images().at("setCartas");
+    generaBaraja();    
+
 }
 
 void Game::start()
@@ -119,9 +117,9 @@ void Game::render()
     player2->render();
 }
 
-Carta Game::getCarta()
+Carta* Game::getCarta()
 {
-    Carta c = baraja.top();
+    Carta* c = baraja.top();
     baraja.pop();
     return c;
 }
@@ -135,7 +133,7 @@ void Game::limpiarBaraja()
 void Game::generaBaraja()
 {
     // Creamos la baraja en un vector
-    vector<Carta> barajaAux;
+    vector<Carta*> barajaAux;
 
     // 52 CARTAS
     // Por palo
@@ -144,7 +142,13 @@ void Game::generaBaraja()
         // Por numero
         for (int j = 1; j <= NUM_CARTAS/NUM_PALOS; j++)
         {
-            Carta nuevaCarta(Palo(i), j);
+            //Carta nuevaCarta(Palo(i), j);
+            Carta* nuevaCarta = new Carta(Palo(i), j,
+                            cartaTexture, cartaTexture,
+                            Vector2D(sdlutils().width()/2, sdlutils().height()/2),
+                            Vector2D(100.0f,150.0f),
+                            0,
+                            false);
 
             // Añadimos la carta a la baraja auxiliar
             barajaAux.push_back(nuevaCarta);

@@ -12,6 +12,7 @@ bool Player::procesaTurno()
     if(ih().isKeyDown(SDLK_SPACE))
     {
         pideCarta();
+        std::cout << "nova";
     }
     else if(ih().isKeyDown(SDLK_r))
     {
@@ -42,16 +43,10 @@ void Player::render()
 
 void Player::pideCarta()
 {
-    Carta nueva = juego->getCarta();
-    Texture* carbalo = &sdlutils().images().at("setCartas");
-    Carta* nuevaFina = new Carta(nueva.getPalo(), nueva.getValor(),
-                            carbalo, carbalo,
-                            Vector2D(sdlutils().width()/2, sdlutils().height()/2),
-                            Vector2D(100.0f,150.0f), 0);
+    Carta* nueva = juego->getCarta();
 
-
-    puntos += nueva.getValor();
-    mano.push_back(nuevaFina);
+    puntos += nueva->getValor();
+    mano.push_back(nueva);
 
     enTurno = false;
 

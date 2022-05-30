@@ -23,7 +23,7 @@ class Carta {
 public:
 
 	Carta(Palo p, int v);
-	Carta(Palo p, int v, Texture* mt, Texture* rt, Vector2D ps, Vector2D sc, float r);
+	Carta(Palo p, int v, Texture* mt, Texture* rt, Vector2D ps, Vector2D sc, float r, bool vi);
 	~Carta(){};
 
 	void render();

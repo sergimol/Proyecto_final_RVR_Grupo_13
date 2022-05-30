@@ -6,6 +6,7 @@ class GameObject;
 class SDL_Renderer;
 class Carta;
 class Player;
+class Texture;
 
 class Game {
 public:
@@ -15,7 +16,7 @@ public:
      void start();
 
      // Devuelve al jugador que lo pida, la siguiente carta del mazo
-	Carta getCarta();
+	Carta* getCarta();
 
     // Vacia la baraja para una nueva partida o lo quesea
 	void limpiarBaraja();
@@ -34,7 +35,7 @@ public:
 private:
     const int NUM_CARTAS = 52;
 	const int NUM_PALOS = 4;
-	stack<Carta> baraja;
+	stack<Carta*> baraja;
 	bool debug = false;
 
     Player* player1;
@@ -44,4 +45,6 @@ private:
 
     // TRUE = 1 FALSE = 2 
     bool turno;
+
+    Texture* cartaTexture;
 };
