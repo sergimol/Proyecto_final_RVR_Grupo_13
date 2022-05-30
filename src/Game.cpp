@@ -8,6 +8,7 @@
 #include "sdlutils/SDLUtils.h"
 #include "Carta.h"
 #include "Player.h"
+#include "Fondo.h"
 
 #include <vector>
 
@@ -25,6 +26,7 @@ void Game::init(int w, int h)
     SDLUtils::init("Jacobo Negro", 800, 600,
     "resources/config/resources.json");
 
+    fondo = new Fondo(&sdlutils().images().at("tapete"));
     player1 = new Player(1, this);
     player2 = new Player(2, this);
     cartaTexture = &sdlutils().images().at("setCartas");
@@ -113,6 +115,7 @@ void Game::finDePartida()
 void Game::render()
 {
     //carta->render();
+    fondo->render();
     player1->render();
     player2->render();
 }

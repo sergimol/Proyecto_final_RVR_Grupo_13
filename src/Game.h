@@ -7,6 +7,8 @@ class SDL_Renderer;
 class Carta;
 class Player;
 class Texture;
+class Fondo;
+
 
 class Game {
 public:
@@ -41,7 +43,7 @@ private:
     Player* player1;
     Player* player2;
 
-    Carta* carta;
+    Fondo* fondo;
 
     // TRUE = 1 FALSE = 2 
     bool turno;

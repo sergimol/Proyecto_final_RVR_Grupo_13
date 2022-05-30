@@ -10,7 +10,6 @@ enum Palo
 {
 	CORAZONES, PICAS, DIAMANTES, TREBOLES
 };
-
 struct miTransform
 {
 	Vector2D pos;

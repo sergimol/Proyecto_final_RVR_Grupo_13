@@ -59,7 +59,6 @@ void Player::pideCarta()
     if(puntos >= 21)
         plantado = true;
 
-    //std::cout << numero << " " << puntos << std::endl;
 }
 
 void Player::colocaCartas(Carta* nuevaCarta)
@@ -68,7 +67,9 @@ void Player::colocaCartas(Carta* nuevaCarta)
     if(numero == 1)
     {
         // Colocamos la carta actual en el medio
-        nuevaCarta->setPos(Vector2D(sdlutils().width()/2, sdlutils().height()/2 - (sdlutils().height()/2)/2));
+        nuevaCarta->setPos(Vector2D(sdlutils().width()/2 - nuevaCarta->getTransform().scale.getX()/2,
+                           sdlutils().height()/2 + (sdlutils().height()/2)/2 - nuevaCarta->getTransform().scale.getY()/2));
+
 
         //Desplazamos el vector de cartas a la izquierda
         for(Carta* c : mano)
@@ -79,8 +80,8 @@ void Player::colocaCartas(Carta* nuevaCarta)
     else
     {
         // Colocamos la carta actual en el medio
-        nuevaCarta->setPos(Vector2D(sdlutils().width()/2, sdlutils().height()/2 + (sdlutils().height()/2)/2));
-
+        nuevaCarta->setPos(Vector2D(sdlutils().width()/2 - nuevaCarta->getTransform().scale.getX()/2,
+                           sdlutils().height()/2 - (sdlutils().height()/2)/2 - nuevaCarta->getTransform().scale.getY()/2));
 
         //Desplazamos el vector de cartas a la izquierda
         for(Carta* c : mano)
