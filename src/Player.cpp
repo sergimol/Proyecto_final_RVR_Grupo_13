@@ -12,7 +12,7 @@ bool Player::procesaTurno()
     if(ih().isKeyDown(SDLK_SPACE))
     {
         pideCarta();
-        std::cout << "nova";
+        //std::cout << "nova";
     }
     else if(ih().isKeyDown(SDLK_r))
     {
@@ -59,7 +59,7 @@ void Player::pideCarta()
     if(puntos >= 21)
         plantado = true;
 
-    std::cout << numero << " " << puntos << std::endl;
+    //std::cout << numero << " " << puntos << std::endl;
 }
 
 void Player::colocaCartas(Carta* nuevaCarta)
@@ -68,23 +68,24 @@ void Player::colocaCartas(Carta* nuevaCarta)
     if(numero == 1)
     {
         // Colocamos la carta actual en el medio
-        nuevaCarta->getTransform().pos = Vector2D(sdlutils().width()/2, sdlutils().height()/2 - (sdlutils().height()/2)/2);
+        nuevaCarta->setPos(Vector2D(sdlutils().width()/2, sdlutils().height()/2 - (sdlutils().height()/2)/2));
 
         //Desplazamos el vector de cartas a la izquierda
         for(Carta* c : mano)
         {
-            c->getTransform().pos = Vector2D(c->getTransform().pos.getX() - 100,  c->getTransform().pos.getY());
+            c->setPos(Vector2D(c->getTransform().pos.getX() - 100,  c->getTransform().pos.getY()));
         }
     }
     else
     {
         // Colocamos la carta actual en el medio
-        nuevaCarta->getTransform().pos = Vector2D(sdlutils().width()/2, sdlutils().height()/2 + (sdlutils().height()/2)/2);
+        nuevaCarta->setPos(Vector2D(sdlutils().width()/2, sdlutils().height()/2 + (sdlutils().height()/2)/2));
+
 
         //Desplazamos el vector de cartas a la izquierda
         for(Carta* c : mano)
         {
-            c->getTransform().pos = Vector2D(c->getTransform().pos.getX() - 100,  c->getTransform().pos.getY());
+            c->setPos(Vector2D(c->getTransform().pos.getX() - 100,  c->getTransform().pos.getY()));
         }
     }
 }

@@ -28,9 +28,15 @@ public:
 
 	void render();
 
+	// GETTERS
 	inline Palo getPalo(){return palo;};
 	inline int getValor(){return valor;};
 	inline miTransform getTransform(){return tr;};
+
+	// SETTERS
+	inline void setPos(Vector2D newPos){tr.pos = newPos;};
+	inline void setScale(Vector2D newSc){tr.scale = newSc;};
+	inline void setPos(float newRot){tr.rot = newRot;};
 
 private:
 	Palo palo;

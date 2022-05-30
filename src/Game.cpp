@@ -124,11 +124,6 @@ Carta* Game::getCarta()
     {
         Carta* c = baraja.top();
         baraja.pop();
-
-        if(!c)
-        std::cout <<  "me la he fumao";
-        else
-        std::cout << "no me la he fumao";
         return c;
     }
     else
