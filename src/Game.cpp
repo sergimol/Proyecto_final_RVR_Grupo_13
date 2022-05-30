@@ -26,10 +26,7 @@ void Game::init(int w, int h)
     generaBaraja();    
 
     player1 = new Player(1, this);
-    player1->setTurno(true);
     player2 = new Player(2, this);
-    player2->setTurno(false);
-
     Texture* carbalo = &sdlutils().images().at("setCartas");
     carta = new Carta(CORAZONES, 5, carbalo, carbalo,
     Vector2D(sdlutils().width()/2, sdlutils().height()/2),
@@ -78,16 +75,39 @@ void Game::update()
 {
     // TURNOS
     // JUGADOR 1
-    if(player1->sigueJugando())
+    if(player1->sigueJugando() && player1->getTurno())
     {
-        player1->procesaTurno();
+        if(!player1->procesaTurno()){
+            player1->setTurno(!player2->sigueJugando());
+            player2->setTurno(player2->sigueJugando() && player1->getPuntos() <= 21);
+        }        
     }
     // JUGADOR 2
-    else
+    else if(player2->sigueJugando() && player2->getTurno())
     {
-        player2->procesaTurno();
+        if(!player2->procesaTurno()){
+            player1->setTurno(player1->sigueJugando() && player2->getPuntos() <= 21);
+            player2->setTurno(!player1->sigueJugando());
+        }
     }
-    
+    else 
+        finDePartida();
+}
+
+void Game::finDePartida()
+{
+    int puntos1 = player1->getPuntos();
+    int puntos2 = player2->getPuntos();
+    int ganador = -1;
+
+    if((puntos1 > puntos2 && puntos1 <= 21) || puntos2 > 21)
+        ganador = 1;
+
+    else if((puntos2 > puntos1 && puntos2 <= 21) || puntos1 > 21)
+        ganador = 2;
+
+    player1->reset(ganador);
+    player2->reset(ganador);
 }
 
 void Game::render()

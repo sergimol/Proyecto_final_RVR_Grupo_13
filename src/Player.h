@@ -14,24 +14,35 @@ public:
         enTurno = t;
     }
 
-    void procesaTurno()
+    bool getTurno() { return enTurno; };
+
+    bool procesaTurno()
     {
-        while(enTurno)
+        if(ih().isKeyDown(SDLK_SPACE))
         {
-            if(ih().isKeyDown(SDLK_SPACE))
-            {
-                pideCarta();
-            }
-            else if(ih().isKeyDown(SDLK_r))
-            {
-                plantado = true;
-                enTurno = false;
-            } 
+            pideCarta();
         }
+        else if(ih().isKeyDown(SDLK_r))
+        {
+            plantado = true;
+            enTurno = false;
+        }
+
+        return enTurno;
+    }
+
+    void reset(int ganador)
+    {
+        mano.clear();
+        puntos = 0;
+        plantado = false;
+        if(ganador == numero)
+            victorias++;
     }
 
     bool sigueJugando() { return !plantado; }
 
+    int getPuntos() { return puntos; }
 private:
     Game* juego;
     int numero;
@@ -53,15 +64,6 @@ private:
 
         if(puntos >= 21)
             plantado = true;
-    }
-
-    void reset(int ganador)
-    {
-        mano.clear();
-        puntos = 0;
-        plantado = false;
-        if(ganador == numero)
-            victorias++;
     }
 };
 

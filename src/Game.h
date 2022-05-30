@@ -29,6 +29,8 @@ public:
     // Render de los objetos
     void render();
 
+    // Comprobaciones al terminar una partida
+    void finDePartida();
 private:
     const int NUM_CARTAS = 52;
 	const int NUM_PALOS = 4;
