@@ -24,13 +24,20 @@ Game::~Game(){
 
 void Game::init(int w, int h)
 {
+    // PREGUNTAR AL JUGADOR POR EL NOMBRE
+    std::string nombre;
+    std::cout << "INTRODUCE TU NOMBRE: ";
+    std::cin >> nombre;
+
+    // INICIAMOS LA VENTANA DE SDL
     SDLUtils::init("Jacobo Negro", 800, 600,
     "resources/config/resources.json");
 
+    // CREAMOS LOS OBJETOS DE LA ESCENA
     cartaTexture = &sdlutils().images().at("setCartas");
     fondo = new Fondo(&sdlutils().images().at("tapete"), cartaTexture, this);
-    player1 = new Player(1, this);
-    player2 = new Player(2, this);
+    player1 = new Player(1, this, nombre);
+    player2 = new Player(2, this, nombre + "2");
     generaBaraja();    
     player1->reset(-1);
     player2->reset(-2);

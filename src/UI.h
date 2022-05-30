@@ -18,6 +18,7 @@ private:
     void renderPuntosActuales();
     void renderVictoriasActuales();
     void renderTurno();
+    void renderNombres();
     //void renderVictoria();
 
     Game* juego;

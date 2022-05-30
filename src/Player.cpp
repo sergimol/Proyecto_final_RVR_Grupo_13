@@ -5,7 +5,7 @@
 #include <vector>
 #include "sdlutils/SDLUtils.h"
 
-
+using namespace std;
 
 bool Player::procesaTurno()
 {
@@ -70,23 +70,28 @@ void Player::colocaCartas(Carta* nuevaCarta)
         nuevaCarta->setPos(Vector2D(sdlutils().width()/2 - nuevaCarta->getTransform().scale.getX()/2,
                            sdlutils().height()/2 + (sdlutils().height()/2)/2 - nuevaCarta->getTransform().scale.getY()/2));
 
-
         //Desplazamos el vector de cartas a la izquierda
         for(Carta* c : mano)
         {
             c->setPos(Vector2D(c->getTransform().pos.getX() - 100,  c->getTransform().pos.getY()));
         }
     }
+    // SI ES JUGADOR 2
     else
     {
         // Colocamos la carta actual en el medio
         nuevaCarta->setPos(Vector2D(sdlutils().width()/2 - nuevaCarta->getTransform().scale.getX()/2,
                            sdlutils().height()/2 - (sdlutils().height()/2)/2 - nuevaCarta->getTransform().scale.getY()/2));
+        // La hacemos inivisible
+        nuevaCarta->setMuestra(false);
 
         //Desplazamos el vector de cartas a la izquierda
         for(Carta* c : mano)
         {
             c->setPos(Vector2D(c->getTransform().pos.getX() - 100,  c->getTransform().pos.getY()));
+
+            // Las hacemos visibles
+            c->setMuestra(true);
         }
     }
 }

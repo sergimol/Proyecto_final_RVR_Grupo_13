@@ -58,4 +58,6 @@ private:
     bool turno;
 
     Texture* cartaTexture;
+
+    bool eresJugador1 = true;
 };

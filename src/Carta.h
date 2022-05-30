@@ -36,6 +36,8 @@ public:
 	inline void setPos(Vector2D newPos){tr.pos = newPos;};
 	inline void setScale(Vector2D newSc){tr.scale = newSc;};
 	inline void setPos(float newRot){tr.rot = newRot;};
+	inline void setVisible(bool v){visible = v;};
+	inline void setMuestra(bool m){seMuestra = m;};
 
 private:
 	Palo palo;

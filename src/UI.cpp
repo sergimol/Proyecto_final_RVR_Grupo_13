@@ -21,6 +21,7 @@ void UI::render()
     renderPuntosActuales();
     renderVictoriasActuales();
     renderTurno();
+    renderNombres();
 }
 
 void UI::renderPuntosActuales()
@@ -30,20 +31,20 @@ void UI::renderPuntosActuales()
     Texture puntosMensaje(
         sdlutils().renderer(),
         "PUNTOS ACTUALES:" + std::to_string(puntos),
-        sdlutils().fonts().at("ARIAL24"),
+        sdlutils().fonts().at("ARIAL16"),
         build_sdlcolor(0xffffffff)
     );
-    puntosMensaje.render(sdlutils().width()/10, sdlutils().height()/10 * 9);
+    puntosMensaje.render(sdlutils().width()/3, sdlutils().height()/10 * 9.5);
 
     // PUNTOS DEL PLAYER 2
     puntos = juego->getPlayer2()->getPuntos();
     Texture puntosMensaje2(
         sdlutils().renderer(),
         "PUNTOS ACTUALES:" + std::to_string(puntos),
-        sdlutils().fonts().at("ARIAL24"),
+        sdlutils().fonts().at("ARIAL16"),
         build_sdlcolor(0xffffffff)
     );
-    puntosMensaje2.render(sdlutils().width()/10, sdlutils().height()/10 - 20);
+    puntosMensaje2.render(sdlutils().width()/3, sdlutils().height()/10 - 45);
 }
 
 void UI::renderVictoriasActuales()
@@ -53,40 +54,61 @@ void UI::renderVictoriasActuales()
     Texture victoriasMensaje(
         sdlutils().renderer(),
         "VICTORIAS:" + std::to_string(victorias),
-        sdlutils().fonts().at("ARIAL24"),
+        sdlutils().fonts().at("ARIAL16"),
         build_sdlcolor(0xffffffff)
     );
-    victoriasMensaje.render(sdlutils().width()/2, sdlutils().height()/10 * 9);
+    victoriasMensaje.render(sdlutils().width()/8, sdlutils().height()/10 * 9.2);
 
     // VICTORIAS DEL PLAYER 2
     victorias = juego->getPlayer2()->getVictorias();
     Texture victoriasMensaje2(
         sdlutils().renderer(),
         "VICTORIAS:" + std::to_string(victorias),
-        sdlutils().fonts().at("ARIAL24"),
+        sdlutils().fonts().at("ARIAL16"),
         build_sdlcolor(0xffffffff)
     );
-    victoriasMensaje2.render(sdlutils().width()/2, sdlutils().height()/10 - 20 );
+    victoriasMensaje2.render(sdlutils().width()/8, sdlutils().height()/10 - 35);
 }
 
 void UI::renderTurno()
 {
-    std::string numeroJugador = "";
+    std::string nombreJugador = "";
     // SI ES EL TURNO DE PLAYER 1
     if(juego->getPlayer1()->getTurno())
-        numeroJugador = "1";
+        nombreJugador = juego->getPlayer1()->getNombre();
     // SI ES EL TURNO DE PLAYER 2
     else
-        numeroJugador = "2";
+        nombreJugador = juego->getPlayer2()->getNombre();
 
     Texture turnoMensaje(
         sdlutils().renderer(),
-        "TURNO DEL JUGADOR " + numeroJugador,
+        "TURNO DE " + nombreJugador,
         sdlutils().fonts().at("ARIAL24"),
         build_sdlcolor(0xffffffff)
     );
-    turnoMensaje.render(sdlutils().width()/4, sdlutils().height()/2);
+    turnoMensaje.render(sdlutils().width()/3.5, sdlutils().height()/2); 
+}
 
-    
+void UI::renderNombres()
+{
+    // VICTORIAS DEL PLAYER 1
+    std::string nombre = juego->getPlayer1()->getNombre();
+    Texture nombreMensaje(
+        sdlutils().renderer(),
+        nombre,
+        sdlutils().fonts().at("ARIAL24"),
+        build_sdlcolor(0xffffffff)
+    );
+    nombreMensaje.render(sdlutils().width()/3, sdlutils().height()/10 * 9);
+
+    // VICTORIAS DEL PLAYER 2
+    nombre = juego->getPlayer2()->getNombre();
+    Texture nombreMensaje2(
+        sdlutils().renderer(),
+        nombre,
+        sdlutils().fonts().at("ARIAL24"),
+        build_sdlcolor(0xffffffff)
+    );
+    nombreMensaje2.render(sdlutils().width()/3, sdlutils().height()/10 - 30 );
 }
 
