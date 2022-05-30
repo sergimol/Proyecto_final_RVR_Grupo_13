@@ -9,6 +9,7 @@
 #include "Carta.h"
 #include "Player.h"
 #include "Fondo.h"
+#include "UI.h"
 
 #include <vector>
 
@@ -33,6 +34,8 @@ void Game::init(int w, int h)
     generaBaraja();    
     player1->reset(-1);
     player2->reset(-2);
+
+    ui = new UI(this);
 }
 
 void Game::start()
@@ -118,6 +121,7 @@ void Game::render()
     fondo->render();
     player1->render();
     player2->render();
+    ui->render();
 }
 
 Carta* Game::getCarta()

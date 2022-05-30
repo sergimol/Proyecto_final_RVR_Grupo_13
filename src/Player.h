@@ -23,6 +23,8 @@ public:
 
     int getPuntos();
 
+    inline int getVictorias(){return victorias;};
+
     void render();
     
 private:

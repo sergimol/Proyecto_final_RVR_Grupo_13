@@ -7,12 +7,13 @@ class Texture;
 
 class Fondo {
 public:
-    Fondo(Texture* t);
+    Fondo(Texture* t, Texture* b);
     void render();
     
 private:
 
     Texture* fondoTex;
+    Tecture* barajaTex;
     //miTransform tr;
 };
 

@@ -8,6 +8,7 @@ class Carta;
 class Player;
 class Texture;
 class Fondo;
+class UI;
 
 
 class Game {
@@ -34,6 +35,10 @@ public:
 
     // Comprobaciones al terminar una partida
     void finDePartida();
+
+    Player* getPlayer1(){return player1;};
+    Player* getPlayer2(){return player2;};
+
 private:
     const int NUM_CARTAS = 52;
 	const int NUM_PALOS = 4;
@@ -44,6 +49,8 @@ private:
     Player* player2;
 
     Fondo* fondo;
+
+    UI* ui;
 
     // TRUE = 1 FALSE = 2 
     bool turno;
