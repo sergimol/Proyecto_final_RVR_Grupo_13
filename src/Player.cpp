@@ -29,6 +29,9 @@ void Player::reset(int ganador)
     plantado = false;
     if(ganador == numero)
         victorias++;
+    pideCarta();
+    pideCarta();
+    enTurno = true;
 }
 
 void Player::render()
@@ -49,14 +52,17 @@ void Player::pideCarta()
                             Vector2D(sdlutils().width()/2, sdlutils().height()/2),
                             Vector2D(100.0f,150.0f), 0);
 
-
-    puntos += nueva.getValor();
+    int valor = nueva.getValor();
+    if(valor > 10) valor = 10;
+    puntos += valor;
     mano.push_back(nuevaFina);
 
     enTurno = false;
 
     if(puntos >= 21)
         plantado = true;
+
+    std::cout << numero << " " << puntos << std::endl;
 }
 
 

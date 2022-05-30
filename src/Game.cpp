@@ -28,6 +28,8 @@ void Game::init(int w, int h)
 
     player1 = new Player(1, this);
     player2 = new Player(2, this);
+    player1->reset(-1);
+    player2->reset(-2);
     /*Texture* carbalo = &sdlutils().images().at("setCartas");
     carta = new Carta(CORAZONES, 5, carbalo, carbalo,
     Vector2D(sdlutils().width()/2, sdlutils().height()/2),
