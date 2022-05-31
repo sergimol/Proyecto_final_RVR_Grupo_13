@@ -123,9 +123,9 @@ void UI::renderFinRonda()
     if(ganador == 0)
         mensajeFinal = "EMPATE";
     else if(ganador == 1)
-        mensajeFinal = "GANA " + juego->getPlayer1()->getNombre();
+        mensajeFinal = "GANA " + std::string(juego->getPlayer1()->getNombre());
     else
-        mensajeFinal = "GANA " + juego->getPlayer2()->getNombre();
+        mensajeFinal = "GANA " + std::string(juego->getPlayer2()->getNombre());
 
     Texture textoFin(
         sdlutils().renderer(),

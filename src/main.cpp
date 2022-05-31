@@ -9,7 +9,7 @@
 #include "Game.h"
 
 
-void start(){
+void start(char *argv[]){
     Game g;
 
     g.init(1000, 1000);
@@ -23,7 +23,7 @@ int main(int argc, char *argv[]){
     printf("%s\n", buffer);
 
     try{
-        start();
+        start(argv);
     }
     catch(const std::string& e)
     {

@@ -3,14 +3,23 @@
 
 #include <vector>
 #include <string>
-
+#include <cstring>
+#include "Serializable.h"
 
 class Game;
 class Carta;
 
 class Player {
 public:
-    Player(int n, Game* j, std::string no) : numero(n), juego(j), nombre(no) {};
+    const static size_t MAX_NAME = 80;
+
+    Player(int n, Game* j, const char * no) : numero(n), juego(j) {
+        strncpy(nombre, no, MAX_NAME);
+    };
+
+    Player(int n, Game* j, PlayerMessage msg) : numero(n), juego(j) {
+        strncpy(nombre, msg.nombre.c_str(), MAX_NAME);
+    };
 
     void setTurno(bool t);
 
@@ -25,7 +34,7 @@ public:
     int getPuntos();
 
     inline int getVictorias(){return victorias;};
-    inline std::string getNombre(){return nombre;};
+    char * getNombre(){return nombre;};
 
     void render();
     
@@ -37,11 +46,34 @@ private:
     std::vector<Carta*> mano;
     int puntos = 0;
     int victorias = 0;
-    std::string nombre;
+    char nombre[MAX_NAME];
     
 
     void pideCarta();
     void colocaCartas(Carta* nuevaCarta);
+};
+
+class PlayerMessage : public Serializable {
+public:
+    static const size_t MESSAGE_SIZE = sizeof(char) * Player::MAX_NAME + sizeof(uint8_t);
+
+    enum MessageType
+    {
+        LOGIN = 0,
+        LOGOUT = 1
+    };
+
+    PlayerMessage(){};
+
+    PlayerMessage(const std::string& n) : nombre(n){};
+
+    uint8_t type;
+
+    std::string nombre;
+
+    void to_bin() override;
+
+    int from_bin(char * dt) override;
 };
 
 #endif    

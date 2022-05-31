@@ -10,12 +10,15 @@
 #include "Player.h"
 #include "Fondo.h"
 #include "UI.h"
+#include "Socket.h"
 
 #include <vector>
 
-Game::Game() 
+Game::Game(char * dir, char * port, char * host) : socket(dir, port)
 {
     state_ = NEWGAME;
+    if(host == "0")
+        eresHost = false;
 }
 
 Game::~Game(){
@@ -26,7 +29,7 @@ Game::~Game(){
 void Game::init(int w, int h)
 {
     // PREGUNTAR AL JUGADOR POR EL NOMBRE
-    std::string nombre;
+    char * nombre;
     std::cout << "INTRODUCE TU NOMBRE: ";
     std::cin >> nombre;
 
@@ -34,12 +37,14 @@ void Game::init(int w, int h)
     SDLUtils::init("Jacobo Negro", 800, 600,
     "resources/config/resources.json");
 
+    if(eresHost){
+        createServer();
+    }
+
     // CREAMOS LOS OBJETOS DE LA ESCENA
     cartaTexture = &sdlutils().images().at("setCartas");
     fondo = new Fondo(&sdlutils().images().at("tapete"), cartaTexture, this);
     player1 = new Player(1, this, nombre);
-    player2 = new Player(2, this, nombre + " 2");
-    inicioDePartida();
 
     ui = new UI(this);
 }
@@ -84,7 +89,13 @@ void Game::update()
     switch (state_)
     {
     case NEWGAME:
-        // cosa de conectar
+        if(eresHost)
+        {
+            createGame();
+        }
+        else {
+            joinGame();
+        }
         break;
     case ROUNDEND:
         if(ih().getKeyDown(SDL_SCANCODE_RETURN))
@@ -212,6 +223,28 @@ void Game::generaBaraja()
         barajaAux.erase(carta);
         indicesRestantes--;
     }
+}
+
+void Game::createServer()
+{
+    socket.bind();
+
+    state_ = NEWGAME;
+}
+
+void Game::createGame()
+{
+    PlayerMessage msg;
+    Socket* client;
+    if(socket.recv(msg, client) == 0 && msg.type == PlayerMessage::LOGIN){
+        player2 = new Player(2, this, msg);
+        inicioDePartida();
+    }
+}
+
+void Game::joinGame() 
+{
+
 }
 
 Uint8 Game::getState()

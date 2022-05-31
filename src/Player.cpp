@@ -96,7 +96,6 @@ void Player::colocaCartas(Carta* nuevaCarta)
     }
 }
 
-
 bool Player::sigueJugando() { return !plantado; }
 
 int Player::getPuntos() { return puntos; }
@@ -104,3 +103,29 @@ int Player::getPuntos() { return puntos; }
 void Player::setTurno(bool t) { enTurno = t;}
 
 bool Player::getTurno() { return enTurno; };
+
+void PlayerMessage::to_bin()
+{
+    alloc_data(MESSAGE_SIZE);
+    
+    memset(_data, 0, MESSAGE_SIZE);
+
+    char* buffer = _data;
+    memcpy(buffer, &type, sizeof(uint8_t));
+    buffer += sizeof(uint8_t);
+    nombre[nombre.size() + 1] = '\0';
+    memcpy(buffer, nombre.c_str(), Player::MAX_NAME * sizeof(char));
+}
+
+int PlayerMessage::from_bin(char * dt)
+{
+    alloc_data(MESSAGE_SIZE);
+
+    memcpy(static_cast<void *>(_data), dt, MESSAGE_SIZE);
+
+    char * buffer = _data;
+    memcpy(&type, buffer, sizeof(uint8_t));
+    buffer += sizeof(uint8_t);
+    memcpy(&nombre[0], buffer, Player::MAX_NAME * sizeof(char));
+    return 0;
+}

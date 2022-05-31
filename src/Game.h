@@ -9,11 +9,11 @@ class Player;
 class Texture;
 class Fondo;
 class UI;
-
+class Socket;
 
 class Game {
 public:
-    Game();
+    Game(char * dir, char * port, char * host);
     virtual ~Game();
     void init(int w, int h);
     void start();
@@ -55,6 +55,12 @@ public:
 
     int getGanador();
 
+    void createServer();
+
+    void createGame();
+
+    void joinGame();
+
 private:
     const int NUM_CARTAS = 52;
 	const int NUM_PALOS = 4;
@@ -77,5 +83,6 @@ private:
 
     Texture* cartaTexture;
 
-    bool eresJugador1 = true;
+    Socket socket;
+    bool eresHost = true;
 };
