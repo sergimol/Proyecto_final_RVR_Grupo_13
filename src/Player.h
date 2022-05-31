@@ -9,15 +9,39 @@
 class Game;
 class Carta;
 
+const static size_t MAX_NAME = 80;
+
+class PlayerMessage : public Serializable {
+public:
+    static const size_t MESSAGE_SIZE = sizeof(char) * MAX_NAME + sizeof(uint8_t);
+
+    enum MessageType
+    {
+        LOGIN = 0,
+        LOGOUT = 1,
+        ACCEPT = 2
+    };
+
+    PlayerMessage(){};
+
+    PlayerMessage(const std::string& n) : nombre(n){};
+
+    uint8_t type;
+
+    std::string nombre;
+
+    void to_bin() override;
+
+    int from_bin(char * dt) override;
+};
+
 class Player {
 public:
-    const static size_t MAX_NAME = 80;
-
     Player(int n, Game* j, const char * no) : numero(n), juego(j) {
         strncpy(nombre, no, MAX_NAME);
     };
 
-    Player(int n, Game* j, PlayerMessage msg) : numero(n), juego(j) {
+    Player(int n, Game* j, const PlayerMessage& msg) : numero(n), juego(j) {
         strncpy(nombre, msg.nombre.c_str(), MAX_NAME);
     };
 
@@ -51,29 +75,6 @@ private:
 
     void pideCarta();
     void colocaCartas(Carta* nuevaCarta);
-};
-
-class PlayerMessage : public Serializable {
-public:
-    static const size_t MESSAGE_SIZE = sizeof(char) * Player::MAX_NAME + sizeof(uint8_t);
-
-    enum MessageType
-    {
-        LOGIN = 0,
-        LOGOUT = 1
-    };
-
-    PlayerMessage(){};
-
-    PlayerMessage(const std::string& n) : nombre(n){};
-
-    uint8_t type;
-
-    std::string nombre;
-
-    void to_bin() override;
-
-    int from_bin(char * dt) override;
 };
 
 #endif    

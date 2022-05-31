@@ -10,7 +10,7 @@
 
 
 void start(char *argv[]){
-    Game g;
+    Game g(argv[1], argv[2], argv[3]);
 
     g.init(1000, 1000);
     g.start();

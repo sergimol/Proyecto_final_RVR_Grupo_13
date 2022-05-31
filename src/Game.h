@@ -1,6 +1,7 @@
 #include <SDL2/SDL.h>
 #include <stack>
 #include <string>
+#include "Socket.h"
 
 using namespace std;
 class GameObject;
@@ -10,7 +11,6 @@ class Player;
 class Texture;
 class Fondo;
 class UI;
-class Socket;
 
 class Game {
 public:
@@ -21,6 +21,7 @@ public:
     
     enum GameState : Uint8 {
         NEWGAME,
+        WAITINGFORHOST,
         PLAYING,
         ROUNDEND,
         GAMEOVER
@@ -60,9 +61,13 @@ public:
 
     void createGame();
 
+    void sendHostInfo();
+
     void joinGame();
 
-    void logOutGame() 
+    void logOutGame(); 
+
+    void receiveHostInfo();
 
 private:
     const int NUM_CARTAS = 52;
@@ -71,7 +76,7 @@ private:
 	bool debug = false;
 
     Player* player1;
-    Player* player2;
+    Player* player2 = nullptr;
 
     Fondo* fondo;
 
@@ -87,7 +92,7 @@ private:
     Texture* cartaTexture;
 
     Socket socket;
-    bool eresHost = true;
+    bool eresHost = false;
 
-    char * nombre;
+    char nombre[80];
 };

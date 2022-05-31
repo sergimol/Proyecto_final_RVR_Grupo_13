@@ -10,15 +10,15 @@
 #include "Player.h"
 #include "Fondo.h"
 #include "UI.h"
-#include "Socket.h"
 
 #include <vector>
 
 Game::Game(char * dir, char * port, char * host) : socket(dir, port)
 {
     state_ = NEWGAME;
-    if(host == "0")
-        eresHost = false;
+    if(host[0] == '1'){
+        eresHost = true;
+    }
 }
 
 Game::~Game(){
@@ -29,7 +29,6 @@ Game::~Game(){
 void Game::init(int w, int h)
 {
     // PREGUNTAR AL JUGADOR POR EL NOMBRE
-    //char * nombre; ahora es variable de clase?
     std::cout << "INTRODUCE TU NOMBRE: ";
     std::cin >> nombre;
 
@@ -92,10 +91,14 @@ void Game::update()
         if(eresHost)
         {
             createGame();
+            sendHostInfo();
         }
         else {
             joinGame();
         }
+        break;
+    case WAITINGFORHOST:
+        receiveHostInfo();
         break;
     case ROUNDEND:
         if(ih().getKeyDown(SDL_SCANCODE_RETURN))
@@ -234,20 +237,33 @@ void Game::createServer()
 
 void Game::createGame()
 {
+    // Recibe la info del cliente
     PlayerMessage msg;
     Socket* client;
     if(socket.recv(msg, client) == 0 && msg.type == PlayerMessage::LOGIN){
+        std::cout << msg.nombre.c_str() << " se ha conectado.\n"; 
         player2 = new Player(2, this, msg);
+        // Crea la partida
         inicioDePartida();
+    }
+}
+
+void Game::sendHostInfo()
+{
+    if(player2 != nullptr){
+        // Manda la información de su jugador al cliente
+        PlayerMessage msg(nombre);
+        msg.type = PlayerMessage::ACCEPT;
+        socket.send(msg, socket);
     }
 }
 
 void Game::joinGame() 
 {
-    PlayerMessage msg;
+    PlayerMessage msg(nombre);
     msg.type = PlayerMessage::LOGIN;
-    msg.nombre = nombre;
     socket.send(msg, socket);
+    state_ = WAITINGFORHOST;
 }
 
 void Game::logOutGame() 
@@ -255,6 +271,19 @@ void Game::logOutGame()
     PlayerMessage msg;
     msg.type = PlayerMessage::LOGOUT;
     socket.send(msg, socket);
+}
+
+void Game::receiveHostInfo()
+{
+    // Recibe la info del cliente
+    PlayerMessage msg;
+    Socket* host;
+    if(socket.recv(msg, host) == 0 && msg.type == PlayerMessage::ACCEPT){
+        player2 = new Player(2, this, msg);
+        std::cout << "Te has conectado a " << msg.nombre << "\n"; 
+        // Crea la partida
+        inicioDePartida();
+    }
 }
 
 Uint8 Game::getState()
