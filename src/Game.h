@@ -1,5 +1,6 @@
 #include <SDL2/SDL.h>
 #include <stack>
+#include <string>
 
 using namespace std;
 class GameObject;
@@ -61,6 +62,8 @@ public:
 
     void joinGame();
 
+    void logOutGame() 
+
 private:
     const int NUM_CARTAS = 52;
 	const int NUM_PALOS = 4;
@@ -85,4 +88,6 @@ private:
 
     Socket socket;
     bool eresHost = true;
+
+    char * nombre;
 };

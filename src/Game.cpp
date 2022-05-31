@@ -29,7 +29,7 @@ Game::~Game(){
 void Game::init(int w, int h)
 {
     // PREGUNTAR AL JUGADOR POR EL NOMBRE
-    char * nombre;
+    //char * nombre; ahora es variable de clase?
     std::cout << "INTRODUCE TU NOMBRE: ";
     std::cin >> nombre;
 
@@ -244,7 +244,17 @@ void Game::createGame()
 
 void Game::joinGame() 
 {
+    PlayerMessage msg;
+    msg.type = PlayerMessage::LOGIN;
+    msg.nombre = nombre;
+    socket.send(msg, socket);
+}
 
+void Game::logOutGame() 
+{
+    PlayerMessage msg;
+    msg.type = PlayerMessage::LOGOUT;
+    socket.send(msg, socket);
 }
 
 Uint8 Game::getState()
