@@ -18,9 +18,13 @@ UI::UI(Game* j)
 
 void UI::render()
 {
+    Uint8 state = juego->getState();
     renderPuntosActuales();
     renderVictoriasActuales();
-    renderTurno();
+    if(state == Game::GameState::PLAYING)
+        renderTurno();
+    else if(state == Game::GameState::ROUNDEND)
+        renderFinRonda();
     renderNombres();
 }
 
@@ -37,14 +41,14 @@ void UI::renderPuntosActuales()
     puntosMensaje.render(sdlutils().width()/3, sdlutils().height()/10 * 9.5);
 
     // PUNTOS DEL PLAYER 2
-    puntos = juego->getPlayer2()->getPuntos();
+    /*puntos = juego->getPlayer2()->getPuntos();
     Texture puntosMensaje2(
         sdlutils().renderer(),
         "PUNTOS ACTUALES:" + std::to_string(puntos),
         sdlutils().fonts().at("ARIAL16"),
         build_sdlcolor(0xffffffff)
     );
-    puntosMensaje2.render(sdlutils().width()/3, sdlutils().height()/10 - 45);
+    puntosMensaje2.render(sdlutils().width()/10, sdlutils().height()/10 - 20);*/
 }
 
 void UI::renderVictoriasActuales()
@@ -111,4 +115,24 @@ void UI::renderNombres()
     );
     nombreMensaje2.render(sdlutils().width()/3, sdlutils().height()/10 - 30 );
 }
+void UI::renderFinRonda()
+{
+    int ganador = juego->getGanador();
+    std::string mensajeFinal;
 
+    if(ganador == 0)
+        mensajeFinal = "EMPATE";
+    else if(ganador == 1)
+        mensajeFinal = "GANA " + juego->getPlayer1()->getNombre();
+    else
+        mensajeFinal = "GANA " + juego->getPlayer2()->getNombre();
+
+    Texture textoFin(
+        sdlutils().renderer(),
+        mensajeFinal,
+        sdlutils().fonts().at("ARIAL24"),
+        build_sdlcolor(0xffffffff)
+    );
+
+    textoFin.render(sdlutils().width()/4, sdlutils().height()/2);
+}

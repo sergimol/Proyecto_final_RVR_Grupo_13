@@ -83,7 +83,7 @@ void Texture::constructFromText(SDL_Renderer *renderer, const std::string &text,
 
 }*/
 void Texture::render(const SDL_Rect &src, const SDL_Rect &dest) {
-		std::cout << "Ey men";
+		//std::cout << "Ey men";
 		assert(texture_ != nullptr);
 		SDL_RenderCopy(renderer_, texture_, &src, &dest);
 

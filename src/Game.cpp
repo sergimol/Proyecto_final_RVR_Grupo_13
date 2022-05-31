@@ -15,6 +15,7 @@
 
 Game::Game() 
 {
+    state_ = NEWGAME;
 }
 
 Game::~Game(){
@@ -37,10 +38,8 @@ void Game::init(int w, int h)
     cartaTexture = &sdlutils().images().at("setCartas");
     fondo = new Fondo(&sdlutils().images().at("tapete"), cartaTexture, this);
     player1 = new Player(1, this, nombre);
-    player2 = new Player(2, this, nombre + "2");
-    generaBaraja();    
-    player1->reset(-1);
-    player2->reset(-2);
+    player2 = new Player(2, this, nombre + " 2");
+    inicioDePartida();
 
     ui = new UI(this);
 }
@@ -82,44 +81,67 @@ void Game::start()
 
 void Game::update()
 {
-    // TURNOS
-    // JUGADOR 1
-    if(player1->sigueJugando() && player1->getTurno())
+    switch (state_)
     {
-        if(!player1->procesaTurno()){
-            player1->setTurno(!player2->sigueJugando());
-            player2->setTurno(player2->sigueJugando() && player1->getPuntos() <= 21);
-        }        
-    }
-    // JUGADOR 2
-    else if(player2->sigueJugando() && player2->getTurno())
-    {
-        if(!player2->procesaTurno()){
-            player1->setTurno(player1->sigueJugando() && player2->getPuntos() <= 21);
-            player2->setTurno(!player1->sigueJugando());
+    case NEWGAME:
+        // cosa de conectar
+        break;
+    case ROUNDEND:
+        if(ih().getKeyDown(SDL_SCANCODE_RETURN))
+            inicioDePartida();
+        break;
+    case PLAYING:
+        // TURNOS
+        // JUGADOR 1
+        if(player1->sigueJugando() && player1->getTurno())
+        {
+            if(!player1->procesaTurno()){
+                player1->setTurno(!player2->sigueJugando());
+                player2->setTurno(player2->sigueJugando() && player1->getPuntos() <= 21);
+            }        
         }
+        // JUGADOR 2
+        else if(player2->sigueJugando() && player2->getTurno())
+        {
+            if(!player2->procesaTurno()){
+                player1->setTurno(player1->sigueJugando() && player2->getPuntos() <= 21);
+                player2->setTurno(!player1->sigueJugando());
+            }
+        }
+        else 
+            finDePartida();
+            break;
+    
+    default:
+        break;
     }
-    else 
-        finDePartida();
+    
+}
+
+void Game::inicioDePartida()
+{
+    limpiarBaraja();
+    generaBaraja();
+
+    player1->reset(ultimoGanador_);
+    player2->reset(ultimoGanador_);
+
+    state_ = PLAYING;
 }
 
 void Game::finDePartida()
 {
     int puntos1 = player1->getPuntos();
     int puntos2 = player2->getPuntos();
-    int ganador = -1;
 
     if((puntos1 > puntos2 && puntos1 <= 21) || puntos2 > 21)
-        ganador = 1;
-
+        ultimoGanador_ = 1;
     else if((puntos2 > puntos1 && puntos2 <= 21) || puntos1 > 21)
-        ganador = 2;
+        ultimoGanador_ = 2;
+    else
+        ultimoGanador_ = 0;
 
-    limpiarBaraja();
-    generaBaraja();
-
-    player1->reset(ganador);
-    player2->reset(ganador);
+    state_ = ROUNDEND;
 }
 
 void Game::render()
@@ -133,7 +155,7 @@ void Game::render()
 
 Carta* Game::getCarta()
 {
-    std::cout <<  "bro?";
+    //std::cout <<  "bro?";
     if(!baraja.empty())
     {
         Carta* c = baraja.top();
@@ -192,5 +214,12 @@ void Game::generaBaraja()
     }
 }
 
+Uint8 Game::getState()
+{
+    return state_;
+}
 
-
+int Game::getGanador()
+{
+    return ultimoGanador_;
+}
