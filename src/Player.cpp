@@ -116,16 +116,17 @@ void PlayerMessage::to_bin()
     char* buffer = _data;
     memcpy(buffer, &type, sizeof(uint8_t));
     buffer += sizeof(uint8_t);
-    nombre[nombre.size() + 1] = '\0';
-    memcpy(buffer, nombre.c_str(), MAX_NAME * sizeof(char));
+    memcpy(buffer, nombre, MAX_NAME * sizeof(char));
 }
 
 int PlayerMessage::from_bin(char * dt)
 {
+    alloc_data(MESSAGE_SIZE);
+
     char * buffer = _data;
 
     memcpy(&type, buffer, sizeof(uint8_t));
     buffer += sizeof(uint8_t);
-    memcpy(&nombre[0], buffer, MAX_NAME * sizeof(char));
+    memcpy(nombre, buffer, MAX_NAME * sizeof(char));
     return 0;
 }

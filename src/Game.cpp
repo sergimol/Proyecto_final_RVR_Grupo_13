@@ -279,11 +279,11 @@ void Game::logOutGame()
 
 void Game::receiveHostInfo()
 {
-    // Recibe la info del cliente
+    // Recibe la info del host
     PlayerMessage msg;
     Socket* host;
     if(socket.recv(msg, host) == 0 && msg.type == PlayerMessage::ACCEPT){
-        player2->setName(msg.nombre.c_str());
+        player2->setName(msg.nombre);
         std::cout << "Te has conectado a " << msg.nombre << "\n"; 
         // Crea la partida
         inicioDePartida();

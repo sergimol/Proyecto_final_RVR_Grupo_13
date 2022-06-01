@@ -24,11 +24,13 @@ public:
 
     PlayerMessage(){};
 
-    PlayerMessage(const std::string & n) : nombre(n){};
+    PlayerMessage(const char * n) {
+        strncpy(nombre, n, MAX_NAME);
+    };
 
     uint8_t type;
 
-    std::string nombre;
+    char nombre[MAX_NAME];
 
     void to_bin() override;
 
