@@ -32,13 +32,17 @@ void Game::init(int w, int h)
     std::cout << "INTRODUCE TU NOMBRE: ";
     std::cin >> nombre;
 
+
     // INICIAMOS LA VENTANA DE SDL
     SDLUtils::init("Jacobo Negro", 800, 600,
     "resources/config/resources.json");
 
-    if(eresHost){
+
+    if(eresHost)
+    {
         createServer();
     }
+
 
     // CREAMOS LOS OBJETOS DE LA ESCENA
     cartaTexture = &sdlutils().images().at("setCartas");
@@ -91,15 +95,22 @@ void Game::update()
     case NEWGAME:
         if(eresHost)
         {
+            std::cout << "2. SOY HOST VOY A CREAR TO.\n";
             createGame();
-            sendHostInfo();
+            //sendHostInfo();
         }
-        else {
+        else 
+        {
+            std::cout << "4. SOY CLIENTE ME VOY A CONECTAR.\n";
             joinGame();
         }
         break;
+    case WAITINGFORCLIENT:
+        // A ESTE ESTADO SOLO LLEGA EL HOST
+        sendHostInfo();
+        break;
     case WAITINGFORHOST:
-        std::cout << "HostInfo\n";
+        // A ESTE ESTADO SOLO LLEGA EL CLIENTE
         receiveHostInfo();
         break;
     case ROUNDEND:
@@ -114,7 +125,8 @@ void Game::update()
             if(!player1->procesaTurno()){
                 player1->setTurno(!player2->sigueJugando());
                 player2->setTurno(player2->sigueJugando() && player1->getPuntos() <= 21);
-            }        
+            }            
+
         }
         // JUGADOR 2
         else if(player2->sigueJugando() && player2->getTurno())
@@ -134,7 +146,7 @@ void Game::update()
     
 }
 
-void Game::inicioDePartida()
+void Game::inicioDePartida()    
 {
     limpiarBaraja();
     generaBaraja();
@@ -143,6 +155,7 @@ void Game::inicioDePartida()
     player2->reset(ultimoGanador_);
 
     state_ = PLAYING;
+    std::cout << "Pasamos al estado PLAYING.\n";
 }
 
 void Game::finDePartida()
@@ -173,7 +186,8 @@ Carta* Game::getCarta()
 {
     //std::cout <<  "bro?";
     if(!baraja.empty())
-    {
+    {    std::cout << "Como host creas el game";
+
         Carta* c = baraja.top();
         baraja.pop();
         return c;
@@ -232,33 +246,55 @@ void Game::generaBaraja()
 
 void Game::createServer()
 {
+    // Enlazamos el socket a puerto y direccion
     socket.bind();
 
     state_ = NEWGAME;
+
+    std::cout << "1. Creaste el server.\n";
+
 }
 
 void Game::createGame()
 {
+    std::cout << "3. Esperando que se conecte el cliente.\n"; 
+
     // Recibe la info del cliente
     PlayerMessage msg;
     Socket* clnt;
-    socket.recv(msg, clnt);
-    if(msg.type == PlayerMessage::LOGIN){
+
+    // AQUI SE QUEDA BLOQUEADA LA APP DEL HOST HASTA QUE LLEGA EL MENSAJE DE LOGIN
+    if(socket.recv(msg, clnt)==0)
+    {
+        std::cout << "Me ha llegado el mensaje de \n" << msg.nombre;    
+        if(msg.type == PlayerMessage::LOGIN)
+            std::cout << "LOGIN \n"; 
+    }
+
+    if(msg.type == PlayerMessage::LOGIN)
+    {
+        std::cout << "8. " << msg.nombre << " ha solicitado conectarse.\n"; 
         client = clnt;
         player2->setName(msg.nombre);
         // Crea la partida
+        std::cout << "7. El host inicializa su juego.\n";
         inicioDePartida();
-        std::cout << msg.nombre << " se ha conectado.\n"; 
         conectado = true;
+        state_ = WAITINGFORCLIENT;
     }
 }
 
 void Game::sendHostInfo()
 {
-    if(conectado){
+    std::cout << "Entro??\n";
+
+    if(conectado)
+    {
+        std::cout << "Entro del todo??\n";
+        std::cout << "7. Confirmando info del host al cliente.\n";
         // Manda la información de su jugador al cliente
         PlayerMessage msg(nombre);
-        msg.type = PlayerMessage::ACCEPT;
+        msg.type = PlayerMessage::ACCEPT; // Aceptamos la solicitud del cliente para conectarse
         socket.send(msg, socket);
     }    
 }
@@ -268,6 +304,7 @@ void Game::joinGame()
     PlayerMessage msg(nombre);
     msg.type = PlayerMessage::LOGIN;
     socket.send(msg, socket);
+    std::cout << "5. Soy "<< nombre << " me quiero conectar.\n";
     state_ = WAITINGFORHOST;
 }
 
@@ -280,12 +317,14 @@ void Game::logOutGame()
 
 void Game::receiveHostInfo()
 {
-    // Recibe la info del host
+    std::cout << "6. Esperando confirmacion del host.\n";
     PlayerMessage msg;
     Socket* host;
-    if(socket.recv(msg, host) == 0 && msg.type == PlayerMessage::ACCEPT){
+    if(socket.recv(msg, host) == 0 && msg.type == PlayerMessage::ACCEPT)
+    {
+        std::cout << "8. Llega la confirmacion del host: inicilizando partida del cliente.\n";
         player2->setName(msg.nombre);
-        std::cout << "Te has conectado a " << msg.nombre << "\n"; 
+        std::cout << "9. Te has conectado a " << msg.nombre << "\n"; 
         // Crea la partida
         inicioDePartida();
     }

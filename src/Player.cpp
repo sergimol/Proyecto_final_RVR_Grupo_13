@@ -117,6 +117,22 @@ void PlayerMessage::to_bin()
     memcpy(buffer, &type, sizeof(uint8_t));
     buffer += sizeof(uint8_t);
     memcpy(buffer, nombre, MAX_NAME * sizeof(char));
+
+    //DEBUG TO BIN
+    string debugType = "FALLO EN TIPO";
+    switch (type)
+    {
+    case LOGIN:
+    debugType="LOGIN";
+        break;
+        case ACCEPT:
+    debugType="ACCEPT";
+        break;
+        case LOGOUT:
+    debugType="LOGOUT";
+        break;
+    }
+    std::cout << "DEBUG TOBIN: tipo = " << debugType << " nombre = " << nombre << "\n";
 }
 
 int PlayerMessage::from_bin(char * dt)
@@ -128,5 +144,22 @@ int PlayerMessage::from_bin(char * dt)
     memcpy(&type, buffer, sizeof(uint8_t));
     buffer += sizeof(uint8_t);
     memcpy(nombre, buffer, MAX_NAME * sizeof(char));
+
+    //DEBUG FROM BIN
+    string debugType = "FALLO EN TIPO";
+    switch (type)
+    {
+    case LOGIN:
+    debugType="LOGIN";
+        break;
+        case ACCEPT:
+    debugType="ACCEPT";
+        break;
+        case LOGOUT:
+    debugType="LOGOUT";
+        break;
+    }
+    std::cout << "DEBUG FROMBIN: tipo = " << debugType << " nombre = " << nombre << "\n";
+
     return 0;
 }

@@ -21,6 +21,7 @@ public:
     
     enum GameState : Uint8 {
         NEWGAME,
+        WAITINGFORCLIENT,
         WAITINGFORHOST,
         PLAYING,
         ROUNDEND,
