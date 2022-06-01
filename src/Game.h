@@ -4,6 +4,7 @@
 #include "Socket.h"
 #include <vector>
 #include <memory>
+#include "Serializable.h"
 
 using namespace std;
 class GameObject;
@@ -14,6 +15,55 @@ class Texture;
 class Fondo;
 class UI;
 
+const static int NUM_CARTAS = 52;
+const static int NUM_PALOS = 4;
+
+class TurnMessage : public Serializable
+{
+public:
+    static const size_t MESSAGE_SIZE = sizeof(bool);
+
+    TurnMessage(){};
+
+    TurnMessage(bool sP) : sePlanta(sP){};
+
+    ~TurnMessage(){};
+
+    bool sePlanta;
+
+    void to_bin() override;
+
+    int from_bin(char * dt) override;
+};
+
+class DeckMessage : public Serializable 
+{
+public:
+    static const size_t MESSAGE_SIZE = NUM_CARTAS * sizeof(int16_t) + sizeof(uint8_t);
+
+    enum MessageType
+    {
+        START = 0,
+    };
+
+    DeckMessage(){};
+
+    DeckMessage(std::vector<int16_t> ib) {
+        for(int i = 0; i < NUM_CARTAS; ++i)
+            indicesBaraja[i] = ib[i];
+    };
+
+    ~DeckMessage(){};
+
+    uint8_t type;
+
+    int16_t indicesBaraja[NUM_CARTAS];
+
+    void to_bin() override;
+
+    int from_bin(char * dt) override;
+};
+
 class Game {
 public:
     Game(char * dir, char * port, char * host);
@@ -23,7 +73,6 @@ public:
     
     enum GameState : Uint8 {
         NEWGAME,
-        WAITINGFORCLIENT,
         WAITINGFORHOST,
         PLAYING,
         ROUNDEND,
@@ -64,18 +113,22 @@ public:
 
     void createGame();
 
-    void sendHostInfo();
-
     void joinGame();
 
     void logOutGame(); 
 
     void receiveHostInfo();
 
+    void barajeaHost();
+
+    void barajeaCliente();
+
+    inline bool esHost() { return eresHost; };
+
+    std::vector<int16_t> indicesBaraja;
 private:
-    const int NUM_CARTAS = 52;
-	const int NUM_PALOS = 4;
 	stack<Carta*> baraja;
+    vector<Carta*> barajaAux;
 	bool debug = false;
     bool conectado = false;
     

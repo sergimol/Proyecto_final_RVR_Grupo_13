@@ -47,8 +47,14 @@ void Game::init(int w, int h)
     // CREAMOS LOS OBJETOS DE LA ESCENA
     cartaTexture = &sdlutils().images().at("setCartas");
     fondo = new Fondo(&sdlutils().images().at("tapete"), cartaTexture, this);
-    player1 = new Player(1, this, nombre);
-    player2 = new Player(2, this, "Esperando");
+    if(eresHost){
+        player1 = new Player(1, this, nombre);
+        player2 = new Player(2, this, "Esperando");
+    }
+    else{
+        player2 = new Player(2, this, nombre);
+        player1 = new Player(1, this, "Esperando");
+    }
 
     ui = new UI(this);
 }
@@ -105,10 +111,6 @@ void Game::update()
             joinGame();
         }
         break;
-    case WAITINGFORCLIENT:
-        // A ESTE ESTADO SOLO LLEGA EL HOST
-        sendHostInfo();
-        break;
     case WAITINGFORHOST:
         // A ESTE ESTADO SOLO LLEGA EL CLIENTE
         receiveHostInfo();
@@ -122,16 +124,36 @@ void Game::update()
         // JUGADOR 1
         if(player1->sigueJugando() && player1->getTurno())
         {
-            if(!player1->procesaTurno()){
+            if(eresHost){
+                if(!player1->procesaTurno()){
+                    player1->setTurno(!player2->sigueJugando());
+                    player2->setTurno(player2->sigueJugando() && player1->getPuntos() <= 21);
+                }            
+            }
+            else{
+                TurnMessage tmsg;
+                if(socket.recv(tmsg) != 0)
+                    return;
+                player1->setPlantado(tmsg.sePlanta);
                 player1->setTurno(!player2->sigueJugando());
-                player2->setTurno(player2->sigueJugando() && player1->getPuntos() <= 21);
-            }            
+                player2->setTurno(player2->sigueJugando() && player1->getPuntos() <= 21);                
+            }
 
         }
         // JUGADOR 2
         else if(player2->sigueJugando() && player2->getTurno())
         {
-            if(!player2->procesaTurno()){
+            if(!eresHost){
+                if(!player2->procesaTurno()){
+                    player1->setTurno(player1->sigueJugando() && player2->getPuntos() <= 21);
+                    player2->setTurno(!player1->sigueJugando());
+                }
+            }
+            else{
+                TurnMessage tmsg;
+                if(socket.recv(tmsg) != 0)
+                    return;
+                player2->setPlantado(tmsg.sePlanta);
                 player1->setTurno(player1->sigueJugando() && player2->getPuntos() <= 21);
                 player2->setTurno(!player1->sigueJugando());
             }
@@ -150,6 +172,10 @@ void Game::inicioDePartida()
 {
     limpiarBaraja();
     generaBaraja();
+    if(eresHost)
+        barajeaHost();
+    else
+        barajeaCliente();
     
     player1->reset(ultimoGanador_);
     player2->reset(ultimoGanador_);
@@ -186,7 +212,7 @@ Carta* Game::getCarta()
 {
     //std::cout <<  "bro?";
     if(!baraja.empty())
-    {    std::cout << "Como host creas el game";
+    {    
 
         Carta* c = baraja.top();
         baraja.pop();
@@ -204,9 +230,6 @@ void Game::limpiarBaraja()
 
 void Game::generaBaraja()
 {
-    // Creamos la baraja en un vector
-    vector<Carta*> barajaAux;
-
     // 52 CARTAS
     // Por palo
     for (int i = 0; i < NUM_PALOS; i++)
@@ -225,22 +248,39 @@ void Game::generaBaraja()
             // Añadimos la carta a la baraja auxiliar
             barajaAux.push_back(nuevaCarta);
         }
-    }
+    }    
+}
 
+void Game::barajeaHost()
+{
     // Barajamos las cartas en el mazo de verdad
     int indicesRestantes = NUM_CARTAS;
     while (indicesRestantes > 0)
     {
         // Elegimos un indice aleatorio
-        int indiceRandom = sdlutils().rand().nextInt(0, indicesRestantes);
+        int16_t indiceRandom = (int16_t)sdlutils().rand().nextInt(0, indicesRestantes);
 
         // Anadimos la carta a la baraja buena
         baraja.push(barajaAux[indiceRandom]);
-
+        indicesBaraja.push_back(indiceRandom);
+        std::cout << indiceRandom << " " << indicesBaraja[NUM_CARTAS - indicesRestantes] << std::endl;
         // Eliminamos la carta de la baraja auxiliar y restamos los indices
         auto carta = barajaAux.begin() + indiceRandom;
         barajaAux.erase(carta);
         indicesRestantes--;
+    }
+}
+
+void Game::barajeaCliente()
+{
+    for(int i = 0; i < indicesBaraja.size(); ++i)
+    {
+        // Anadimos la carta a la baraja buena
+        baraja.push(barajaAux[indicesBaraja[i]]);
+
+        // Eliminamos la carta de la baraja auxiliar
+        auto carta = barajaAux.begin() + indicesBaraja[i];
+        barajaAux.erase(carta);
     }
 }
 
@@ -282,26 +322,16 @@ void Game::createGame()
         std::cout << "8. El host inicializa su juego.\n";
         inicioDePartida();
         conectado = true;
-        //state_ = WAITINGFORCLIENT;
 
         // LE DECIMOS AL CLIENTE QUE HEMOS ACEPTADO SU PETICION
         PlayerMessage msg(nombre);
         msg.type = PlayerMessage::ACCEPT; // Aceptamos la solicitud del cliente para conectarse
         socket.send(msg, *clnt);
-    }
-}
 
-void Game::sendHostInfo()
-{
-    if(conectado)
-    {
-        //std::cout << "Entro del todo??\n";
-        //std::cout << "7. Confirmando info del host al cliente.\n";
-        // Manda la información de su jugador al cliente
-        PlayerMessage msg(nombre);
-        msg.type = PlayerMessage::ACCEPT; // Aceptamos la solicitud del cliente para conectarse
-        socket.send(msg, *clients[0].get());
-    }    
+        DeckMessage gmsg(indicesBaraja);
+        gmsg.type = DeckMessage::START;
+        socket.send(gmsg, *clnt);
+    }
 }
 
 void Game::joinGame() 
@@ -326,32 +356,18 @@ void Game::receiveHostInfo()
     PlayerMessage msg;
     Socket* host;
     
-    if(socket.recv(msg, host) == 0)
-    {
-        std::string debugType = "FALLO EN TIPO";
-        switch (msg.type)
-        {
-            case PlayerMessage::LOGIN:
-        debugType="LOGIN";
-            break;
-            case PlayerMessage::ACCEPT:
-        debugType="ACCEPT";
-            break;
-            case PlayerMessage::LOGOUT:
-        debugType="LOGOUT";
-            break;
-        };
-        std::cout << "Llega mensaje pero no acepta: TIPO = " << debugType << " nombre = " << msg.nombre << "\n"; 
-    }
-    else
-        std::cout << "pendejo\n";
-    if(msg.type == PlayerMessage::ACCEPT)
+    if(socket.recv(msg, host) == 0 && msg.type == PlayerMessage::ACCEPT)
     {
         std::cout << "8. Llega la confirmacion del host: inicilizando partida del cliente.\n";
-        player2->setName(msg.nombre);
-        std::cout << "9. Te has conectado a " << msg.nombre << "\n"; 
-        // Crea la partida
-        inicioDePartida();
+        player1->setName(msg.nombre);
+        DeckMessage gmsg;
+        if(socket.recv(gmsg, host) == 0 && gmsg.type == DeckMessage::START){
+            std::cout << "9. Te has conectado a " << msg.nombre << "\n";
+            for(int i = 0; i < NUM_CARTAS; ++i)
+                indicesBaraja.push_back(gmsg.indicesBaraja[i]);
+            // Crea la partida
+            inicioDePartida();
+        }
     }
 }
 
@@ -363,4 +379,57 @@ Uint8 Game::getState()
 int Game::getGanador()
 {
     return ultimoGanador_;
+}
+
+void DeckMessage::to_bin()
+{
+    alloc_data(MESSAGE_SIZE);
+
+    memset(_data, 0, MESSAGE_SIZE);
+    
+    char* buffer = _data;
+    memcpy(buffer, &type, sizeof(uint8_t));
+    buffer += sizeof(uint8_t);
+
+    for(int i = 0; i < NUM_CARTAS; ++i){
+        memcpy(buffer, &indicesBaraja[i], sizeof(int16_t));
+        buffer += sizeof(int16_t);
+    }
+}
+
+int DeckMessage::from_bin(char * dt)
+{
+    alloc_data(MESSAGE_SIZE);
+    memcpy(static_cast<void*>(_data), dt, MESSAGE_SIZE);
+
+    char * buffer = _data;
+
+    memcpy(&type, buffer, sizeof(uint8_t));
+    buffer += sizeof(uint8_t);
+    for(int i = 0; i < NUM_CARTAS; ++i){
+        memcpy(&indicesBaraja[i], buffer, sizeof(int16_t));
+        buffer += sizeof(int16_t);
+    }
+    return 0;
+}
+
+void TurnMessage::to_bin()
+{
+    alloc_data(MESSAGE_SIZE);
+
+    memset(_data, 0, MESSAGE_SIZE);
+    
+    char* buffer = _data;
+    memcpy(buffer, &sePlanta, sizeof(bool));
+}
+
+int TurnMessage::from_bin(char * dt)
+{
+    alloc_data(MESSAGE_SIZE);
+    memcpy(static_cast<void*>(_data), dt, MESSAGE_SIZE);
+
+    char * buffer = _data;
+
+    memcpy(&sePlanta, buffer, sizeof(bool));
+    return 0;
 }

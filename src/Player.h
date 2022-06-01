@@ -58,6 +58,8 @@ public:
 
     int getPuntos();
 
+    void setPlantado(bool p);
+    
     inline int getVictorias(){return victorias;};
     char * getNombre(){return nombre;};
 

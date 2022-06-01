@@ -32,8 +32,12 @@ void UI::render()
 
 void UI::renderPuntosActuales()
 {
+    int puntos;
     // PUNTOS DEL PLAYER 1
-    int puntos = juego->getPlayer1()->getPuntos();
+    if(juego->esHost())
+        puntos = juego->getPlayer1()->getPuntos();
+    else    
+        puntos = juego->getPlayer2()->getPuntos();
     Texture puntosMensaje(
         sdlutils().renderer(),
         "PUNTOS ACTUALES:" + std::to_string(puntos),
@@ -63,7 +67,6 @@ void UI::renderVictoriasActuales()
         sdlutils().fonts().at("ARIAL16"),
         build_sdlcolor(0xffffffff)
     );
-    victoriasMensaje.render(sdlutils().width()/8, sdlutils().height()/10 * 9.2);
 
     // VICTORIAS DEL PLAYER 2
     victorias = juego->getPlayer2()->getVictorias();
@@ -73,7 +76,15 @@ void UI::renderVictoriasActuales()
         sdlutils().fonts().at("ARIAL16"),
         build_sdlcolor(0xffffffff)
     );
-    victoriasMensaje2.render(sdlutils().width()/8, sdlutils().height()/10 - 35);
+
+    if(juego->esHost()){
+        victoriasMensaje.render(sdlutils().width()/8, sdlutils().height()/10 * 9.2);
+        victoriasMensaje2.render(sdlutils().width()/8, sdlutils().height()/10 - 35);
+    }
+    else{
+        victoriasMensaje2.render(sdlutils().width()/8, sdlutils().height()/10 * 9.2);
+        victoriasMensaje.render(sdlutils().width()/8, sdlutils().height()/10 - 35);
+    }
 }
 
 void UI::renderTurno()
@@ -105,7 +116,6 @@ void UI::renderNombres()
         sdlutils().fonts().at("ARIAL24"),
         build_sdlcolor(0xffffffff)
     );
-    nombreMensaje.render(sdlutils().width()/3, sdlutils().height()/10 * 9);
 
     // VICTORIAS DEL PLAYER 2
     nombre = juego->getPlayer2()->getNombre();
@@ -115,7 +125,14 @@ void UI::renderNombres()
         sdlutils().fonts().at("ARIAL24"),
         build_sdlcolor(0xffffffff)
     );
-    nombreMensaje2.render(sdlutils().width()/3, sdlutils().height()/10 - 30 );
+    if(juego->esHost()){
+        nombreMensaje.render(sdlutils().width()/3, sdlutils().height()/10 * 9);
+        nombreMensaje2.render(sdlutils().width()/3, sdlutils().height()/10 - 30 );
+    }
+    else{
+        nombreMensaje2.render(sdlutils().width()/3, sdlutils().height()/10 * 9);
+        nombreMensaje.render(sdlutils().width()/3, sdlutils().height()/10 - 30 );
+    }
 }
 void UI::renderFinRonda()
 {

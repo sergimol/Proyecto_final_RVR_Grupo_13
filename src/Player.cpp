@@ -64,7 +64,7 @@ void Player::pideCarta()
 void Player::colocaCartas(Carta* nuevaCarta)
 {
     // SI ES JUGADOR 1
-    if(numero == 1)
+    if((numero == 1 && juego->esHost()) || (numero == 2 && !juego->esHost()))
     {
         // Colocamos la carta actual en el medio
         nuevaCarta->setPos(Vector2D(sdlutils().width()/2 - nuevaCarta->getTransform().scale.getX()/2,
@@ -107,6 +107,11 @@ bool Player::getTurno() { return enTurno; };
 void Player::setName(const char * no)
 {
     strncpy(nombre, no, MAX_NAME);
+}
+
+void Player::setPlantado(bool p)
+{
+    plantado = p;
 }
 
 void PlayerMessage::to_bin()
