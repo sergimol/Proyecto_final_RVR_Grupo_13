@@ -21,7 +21,8 @@ private:
     void renderFinRonda();
     void renderNombres();
     //void renderVictoria();
-
+    void renderEsperandoConexion();
+    
     Game* juego;
 };
 

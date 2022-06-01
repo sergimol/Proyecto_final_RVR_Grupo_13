@@ -104,12 +104,15 @@ void Player::setTurno(bool t) { enTurno = t;}
 
 bool Player::getTurno() { return enTurno; };
 
+void Player::setName(const char * no)
+{
+    strncpy(nombre, no, MAX_NAME);
+}
+
 void PlayerMessage::to_bin()
 {
     alloc_data(MESSAGE_SIZE);
     
-    memset(_data, 0, MESSAGE_SIZE);
-
     char* buffer = _data;
     memcpy(buffer, &type, sizeof(uint8_t));
     buffer += sizeof(uint8_t);
@@ -119,11 +122,8 @@ void PlayerMessage::to_bin()
 
 int PlayerMessage::from_bin(char * dt)
 {
-    alloc_data(MESSAGE_SIZE);
-
-    memcpy(static_cast<void *>(_data), dt, MESSAGE_SIZE);
-
     char * buffer = _data;
+
     memcpy(&type, buffer, sizeof(uint8_t));
     buffer += sizeof(uint8_t);
     memcpy(&nombre[0], buffer, MAX_NAME * sizeof(char));

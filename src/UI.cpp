@@ -25,6 +25,8 @@ void UI::render()
         renderTurno();
     else if(state == Game::GameState::ROUNDEND)
         renderFinRonda();
+    else if(state == Game::GameState::NEWGAME || state == Game::GameState::WAITINGFORHOST)
+        renderEsperandoConexion();
     renderNombres();
 }
 
@@ -135,4 +137,16 @@ void UI::renderFinRonda()
     );
 
     textoFin.render(sdlutils().width()/4, sdlutils().height()/2);
+}
+
+void UI::renderEsperandoConexion()
+{
+    Texture textoConex(
+        sdlutils().renderer(),
+        "Esperando conexión con otro jugador.",
+        sdlutils().fonts().at("ARIAL24"),
+        build_sdlcolor(0xffffffff)
+    );
+
+    textoConex.render(sdlutils().width()/4, sdlutils().height()/2);
 }

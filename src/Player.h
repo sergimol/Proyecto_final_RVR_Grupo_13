@@ -24,7 +24,7 @@ public:
 
     PlayerMessage(){};
 
-    PlayerMessage(const std::string& n) : nombre(n){};
+    PlayerMessage(const std::string & n) : nombre(n){};
 
     uint8_t type;
 
@@ -39,10 +39,6 @@ class Player {
 public:
     Player(int n, Game* j, const char * no) : numero(n), juego(j) {
         strncpy(nombre, no, MAX_NAME);
-    };
-
-    Player(int n, Game* j, const PlayerMessage& msg) : numero(n), juego(j) {
-        strncpy(nombre, msg.nombre.c_str(), MAX_NAME);
     };
 
     void setTurno(bool t);
@@ -62,6 +58,7 @@ public:
 
     void render();
     
+    void setName(const char * no);
 private:
     Game* juego;
     int numero;

@@ -44,6 +44,7 @@ void Game::init(int w, int h)
     cartaTexture = &sdlutils().images().at("setCartas");
     fondo = new Fondo(&sdlutils().images().at("tapete"), cartaTexture, this);
     player1 = new Player(1, this, nombre);
+    player2 = new Player(2, this, "Esperando");
 
     ui = new UI(this);
 }
@@ -90,7 +91,9 @@ void Game::update()
     case NEWGAME:
         if(eresHost)
         {
+            std::cout << "Crea partida\n";
             createGame();
+            std::cout << "Manda info\n";
             sendHostInfo();
         }
         else {
@@ -136,7 +139,7 @@ void Game::inicioDePartida()
 {
     limpiarBaraja();
     generaBaraja();
-
+    
     player1->reset(ultimoGanador_);
     player2->reset(ultimoGanador_);
 
@@ -240,11 +243,12 @@ void Game::createGame()
     // Recibe la info del cliente
     PlayerMessage msg;
     Socket* client;
-    if(socket.recv(msg, client) == 0 && msg.type == PlayerMessage::LOGIN){
-        std::cout << msg.nombre.c_str() << " se ha conectado.\n"; 
-        player2 = new Player(2, this, msg);
+    socket.recv(msg, client);
+    if(msg.type == PlayerMessage::LOGIN){
+        player2->setName(msg.nombre.c_str());
         // Crea la partida
         inicioDePartida();
+        std::cout << msg.nombre.c_str() << " se ha conectado.\n"; 
     }
 }
 
@@ -279,7 +283,7 @@ void Game::receiveHostInfo()
     PlayerMessage msg;
     Socket* host;
     if(socket.recv(msg, host) == 0 && msg.type == PlayerMessage::ACCEPT){
-        player2 = new Player(2, this, msg);
+        player2->setName(msg.nombre.c_str());
         std::cout << "Te has conectado a " << msg.nombre << "\n"; 
         // Crea la partida
         inicioDePartida();
