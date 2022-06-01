@@ -261,7 +261,7 @@ void Game::createGame()
 
     // Recibe la info del cliente
     PlayerMessage msg;
-    Socket* clnt;
+    Socket* clnt = new Socket(socket);
 
     // AQUI SE QUEDA BLOQUEADA LA APP DEL HOST HASTA QUE LLEGA EL MENSAJE DE LOGIN
     if(socket.recv(msg, clnt)==0)
@@ -274,7 +274,9 @@ void Game::createGame()
     if(msg.type == PlayerMessage::LOGIN)
     {
         std::cout << "7. " << msg.nombre << " ha solicitado conectarse.\n"; 
-        client = clnt;
+        std::cout << "Fuera: " << *clnt << std::endl;
+        std::unique_ptr<Socket> cl(clnt);
+        clients.push_back(std::move(cl));
         player2->setName(msg.nombre);
         // Crea la partida
         std::cout << "8. El host inicializa su juego.\n";
@@ -285,7 +287,7 @@ void Game::createGame()
         // LE DECIMOS AL CLIENTE QUE HEMOS ACEPTADO SU PETICION
         PlayerMessage msg(nombre);
         msg.type = PlayerMessage::ACCEPT; // Aceptamos la solicitud del cliente para conectarse
-        socket.send(msg, socket);
+        socket.send(msg, *clnt);
     }
 }
 
@@ -298,7 +300,7 @@ void Game::sendHostInfo()
         // Manda la información de su jugador al cliente
         PlayerMessage msg(nombre);
         msg.type = PlayerMessage::ACCEPT; // Aceptamos la solicitud del cliente para conectarse
-        socket.send(msg, socket);
+        socket.send(msg, *clients[0].get());
     }    
 }
 
@@ -324,7 +326,7 @@ void Game::receiveHostInfo()
     PlayerMessage msg;
     Socket* host;
     
-    if(socket.recv(msg) == 0)
+    if(socket.recv(msg, host) == 0)
     {
         std::string debugType = "FALLO EN TIPO";
         switch (msg.type)

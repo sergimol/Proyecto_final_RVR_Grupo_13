@@ -2,6 +2,8 @@
 #include <stack>
 #include <string>
 #include "Socket.h"
+#include <vector>
+#include <memory>
 
 using namespace std;
 class GameObject;
@@ -94,7 +96,7 @@ private:
     Texture* cartaTexture;
 
     Socket socket;
-    Socket* client;
+    std::vector<std::unique_ptr<Socket>> clients;
 
     bool eresHost = false;
 

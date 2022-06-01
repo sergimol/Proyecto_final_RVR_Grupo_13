@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/Blackjack.out",
-            "args": [],
+            "args": ["localhost", "15000", "0"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
