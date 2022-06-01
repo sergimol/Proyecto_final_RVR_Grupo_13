@@ -91,9 +91,7 @@ void Game::update()
     case NEWGAME:
         if(eresHost)
         {
-            std::cout << "Crea partida\n";
             createGame();
-            std::cout << "Manda info\n";
             sendHostInfo();
         }
         else {
@@ -101,6 +99,7 @@ void Game::update()
         }
         break;
     case WAITINGFORHOST:
+        std::cout << "HostInfo\n";
         receiveHostInfo();
         break;
     case ROUNDEND:
@@ -242,24 +241,26 @@ void Game::createGame()
 {
     // Recibe la info del cliente
     PlayerMessage msg;
-    Socket* client;
-    socket.recv(msg, client);
+    Socket* clnt;
+    socket.recv(msg, clnt);
     if(msg.type == PlayerMessage::LOGIN){
-        player2->setName(msg.nombre.c_str());
+        client = clnt;
+        player2->setName(msg.nombre);
         // Crea la partida
         inicioDePartida();
-        std::cout << msg.nombre.c_str() << " se ha conectado.\n"; 
+        std::cout << msg.nombre << " se ha conectado.\n"; 
+        conectado = true;
     }
 }
 
 void Game::sendHostInfo()
 {
-    if(player2 != nullptr){
+    if(conectado){
         // Manda la información de su jugador al cliente
         PlayerMessage msg(nombre);
         msg.type = PlayerMessage::ACCEPT;
         socket.send(msg, socket);
-    }
+    }    
 }
 
 void Game::joinGame() 

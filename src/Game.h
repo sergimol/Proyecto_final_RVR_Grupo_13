@@ -74,7 +74,8 @@ private:
 	const int NUM_PALOS = 4;
 	stack<Carta*> baraja;
 	bool debug = false;
-
+    bool conectado = false;
+    
     Player* player1;
     Player* player2 = nullptr;
 
@@ -92,6 +93,8 @@ private:
     Texture* cartaTexture;
 
     Socket socket;
+    Socket* client;
+
     bool eresHost = false;
 
     char nombre[80];
