@@ -112,11 +112,14 @@ void Player::setName(const char * no)
 void PlayerMessage::to_bin()
 {
     alloc_data(MESSAGE_SIZE);
+
+    memset(_data, 0, MESSAGE_SIZE);
     
     char* buffer = _data;
     memcpy(buffer, &type, sizeof(uint8_t));
+
     buffer += sizeof(uint8_t);
-    memcpy(buffer, nombre, MAX_NAME * sizeof(char));
+    memcpy(buffer, &nombre, MAX_NAME * sizeof(char));
 
     //DEBUG TO BIN
     string debugType = "FALLO EN TIPO";
@@ -132,18 +135,19 @@ void PlayerMessage::to_bin()
     debugType="LOGOUT";
         break;
     }
-    std::cout << "DEBUG TOBIN: tipo = " << debugType << " nombre = " << nombre << "\n";
+    //std::cout << "DEBUG TOBIN: tipo = " << debugType << " nombre = " << nombre << "\n";
 }
 
 int PlayerMessage::from_bin(char * dt)
 {
     alloc_data(MESSAGE_SIZE);
+    memcpy(static_cast<void*>(_data), dt, MESSAGE_SIZE);
 
     char * buffer = _data;
 
     memcpy(&type, buffer, sizeof(uint8_t));
     buffer += sizeof(uint8_t);
-    memcpy(nombre, buffer, MAX_NAME * sizeof(char));
+    memcpy(&nombre, buffer, MAX_NAME * sizeof(char));
 
     //DEBUG FROM BIN
     string debugType = "FALLO EN TIPO";

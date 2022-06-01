@@ -9,11 +9,11 @@
 class Game;
 class Carta;
 
-const static size_t MAX_NAME = 80;
+const static int MAX_NAME = 80;
 
 class PlayerMessage : public Serializable {
 public:
-    static const size_t MESSAGE_SIZE = sizeof(char) * MAX_NAME + sizeof(uint8_t);
+    static const size_t MESSAGE_SIZE = sizeof(uint8_t) + MAX_NAME * sizeof(char);
 
     enum MessageType
     {

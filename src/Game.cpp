@@ -286,12 +286,10 @@ void Game::createGame()
 
 void Game::sendHostInfo()
 {
-    std::cout << "Entro??\n";
-
     if(conectado)
     {
-        std::cout << "Entro del todo??\n";
-        std::cout << "7. Confirmando info del host al cliente.\n";
+        //std::cout << "Entro del todo??\n";
+        //std::cout << "7. Confirmando info del host al cliente.\n";
         // Manda la información de su jugador al cliente
         PlayerMessage msg(nombre);
         msg.type = PlayerMessage::ACCEPT; // Aceptamos la solicitud del cliente para conectarse
