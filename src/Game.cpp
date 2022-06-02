@@ -75,10 +75,10 @@ void Game::start()
         // UPDATE DE LAS COSAS
         update();
 
-        sdlutils().clearRenderer();        
+          
         // RENDER DE LAS COSAS
+        sdlutils().clearRenderer();      
         render();
-        //mngr_->render();
         sdlutils().presentRenderer();
 
         Uint32 frameTime = sdlutils().currRealTime() - startTime;
@@ -266,21 +266,26 @@ void Game::createGame()
     // AQUI SE QUEDA BLOQUEADA LA APP DEL HOST HASTA QUE LLEGA EL MENSAJE DE LOGIN
     if(socket.recv(msg, clnt)==0)
     {
-        std::cout << "Me ha llegado el mensaje de \n" << msg.nombre;    
         if(msg.type == PlayerMessage::LOGIN)
-            std::cout << "LOGIN \n"; 
+            std::cout << "Recibidio mensaje de LOGIN \n";     
+
     }
 
     if(msg.type == PlayerMessage::LOGIN)
     {
-        std::cout << "8. " << msg.nombre << " ha solicitado conectarse.\n"; 
+        std::cout << "7. " << msg.nombre << " ha solicitado conectarse.\n"; 
         client = clnt;
         player2->setName(msg.nombre);
         // Crea la partida
-        std::cout << "7. El host inicializa su juego.\n";
+        std::cout << "8. El host inicializa su juego.\n";
         inicioDePartida();
         conectado = true;
-        state_ = WAITINGFORCLIENT;
+        //state_ = WAITINGFORCLIENT;
+
+        // LE DECIMOS AL CLIENTE QUE HEMOS ACEPTADO SU PETICION
+        PlayerMessage msg(nombre);
+        msg.type = PlayerMessage::ACCEPT; // Aceptamos la solicitud del cliente para conectarse
+        socket.send(msg, socket);
     }
 }
 
@@ -318,7 +323,27 @@ void Game::receiveHostInfo()
     std::cout << "6. Esperando confirmacion del host.\n";
     PlayerMessage msg;
     Socket* host;
-    if(socket.recv(msg, host) == 0 && msg.type == PlayerMessage::ACCEPT)
+    
+    if(socket.recv(msg) == 0)
+    {
+        std::string debugType = "FALLO EN TIPO";
+        switch (msg.type)
+        {
+            case PlayerMessage::LOGIN:
+        debugType="LOGIN";
+            break;
+            case PlayerMessage::ACCEPT:
+        debugType="ACCEPT";
+            break;
+            case PlayerMessage::LOGOUT:
+        debugType="LOGOUT";
+            break;
+        };
+        std::cout << "Llega mensaje pero no acepta: TIPO = " << debugType << " nombre = " << msg.nombre << "\n"; 
+    }
+    else
+        std::cout << "pendejo\n";
+    if(msg.type == PlayerMessage::ACCEPT)
     {
         std::cout << "8. Llega la confirmacion del host: inicilizando partida del cliente.\n";
         player2->setName(msg.nombre);

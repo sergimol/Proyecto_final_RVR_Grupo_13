@@ -28,6 +28,8 @@ public:
         strncpy(nombre, n, MAX_NAME);
     };
 
+    ~PlayerMessage(){};
+
     uint8_t type;
 
     char nombre[MAX_NAME];
@@ -42,6 +44,7 @@ public:
     Player(int n, Game* j, const char * no) : numero(n), juego(j) {
         strncpy(nombre, no, MAX_NAME);
     };
+    ~Player(){};
 
     void setTurno(bool t);
 

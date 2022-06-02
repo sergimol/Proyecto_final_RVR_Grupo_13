@@ -122,7 +122,7 @@ void PlayerMessage::to_bin()
     memcpy(buffer, &nombre, MAX_NAME * sizeof(char));
 
     //DEBUG TO BIN
-    string debugType = "FALLO EN TIPO";
+    std::string debugType = "FALLO EN TIPO";
     switch (type)
     {
     case LOGIN:
@@ -135,7 +135,7 @@ void PlayerMessage::to_bin()
     debugType="LOGOUT";
         break;
     }
-    //std::cout << "DEBUG TOBIN: tipo = " << debugType << " nombre = " << nombre << "\n";
+    std::cout << "DEBUG TOBIN: tipo = " << debugType << " nombre = " << nombre << "\n";
 }
 
 int PlayerMessage::from_bin(char * dt)
