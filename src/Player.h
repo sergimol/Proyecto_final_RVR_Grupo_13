@@ -52,6 +52,8 @@ public:
 
     bool procesaTurno();
 
+    bool procesaTurnoMensaje(bool sigue, int p);
+
     void reset(int ganador);
 
     bool sigueJugando();

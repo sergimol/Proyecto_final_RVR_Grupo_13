@@ -23,6 +23,22 @@ bool Player::procesaTurno()
     return enTurno;
 }
 
+bool Player::procesaTurnoMensaje(bool sigue, int p)
+{
+    if(sigue || puntos != p)
+    {
+        pideCarta();
+        //std::cout << "nova";
+    }
+    else 
+    {
+        plantado = true;
+        enTurno = false;
+    }
+
+    return enTurno;
+}
+
 void Player::reset(int ganador)
 {
     mano.clear();

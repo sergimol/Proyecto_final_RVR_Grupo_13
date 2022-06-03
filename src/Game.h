@@ -21,15 +21,17 @@ const static int NUM_PALOS = 4;
 class TurnMessage : public Serializable
 {
 public:
-    static const size_t MESSAGE_SIZE = sizeof(bool);
+    static const size_t MESSAGE_SIZE = sizeof(bool) + sizeof(int);
 
     TurnMessage(){};
 
-    TurnMessage(bool sP) : sePlanta(sP){};
+    TurnMessage(bool s, int p) : sigue(s), puntos(p){};
 
     ~TurnMessage(){};
 
-    bool sePlanta;
+    bool sigue;
+
+    int puntos;
 
     void to_bin() override;
 
@@ -149,7 +151,7 @@ private:
     Texture* cartaTexture;
 
     Socket socket;
-    std::vector<std::unique_ptr<Socket>> clients;
+    Socket* other;
 
     bool eresHost = false;
 

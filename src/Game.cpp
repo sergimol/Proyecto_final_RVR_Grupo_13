@@ -116,8 +116,21 @@ void Game::update()
         receiveHostInfo();
         break;
     case ROUNDEND:
-        if(ih().getKeyDown(SDL_SCANCODE_RETURN))
+        if(ih().getKeyDown(SDL_SCANCODE_RETURN) && eresHost){
             inicioDePartida();
+            DeckMessage gmsg(indicesBaraja);
+            gmsg.type = DeckMessage::START;
+            socket.send(gmsg, *other);
+        }
+        else{
+            DeckMessage gmsg;
+            if(socket.recv(gmsg, other) == 0 && gmsg.type == DeckMessage::START){
+            for(int i = 0; i < NUM_CARTAS; ++i)
+                indicesBaraja.push_back(gmsg.indicesBaraja[i]);
+            // Crea la partida
+            inicioDePartida();
+        }
+        }
         break;
     case PLAYING:
         // TURNOS
@@ -128,13 +141,15 @@ void Game::update()
                 if(!player1->procesaTurno()){
                     player1->setTurno(!player2->sigueJugando());
                     player2->setTurno(player2->sigueJugando() && player1->getPuntos() <= 21);
+                    TurnMessage tmsg(player1->sigueJugando(), player1->getPuntos());
+                    socket.send(tmsg, *other);
                 }            
             }
             else{
                 TurnMessage tmsg;
                 if(socket.recv(tmsg) != 0)
                     return;
-                player1->setPlantado(tmsg.sePlanta);
+                player1->procesaTurnoMensaje(tmsg.sigue, tmsg.puntos);
                 player1->setTurno(!player2->sigueJugando());
                 player2->setTurno(player2->sigueJugando() && player1->getPuntos() <= 21);                
             }
@@ -147,13 +162,15 @@ void Game::update()
                 if(!player2->procesaTurno()){
                     player1->setTurno(player1->sigueJugando() && player2->getPuntos() <= 21);
                     player2->setTurno(!player1->sigueJugando());
+                    TurnMessage tmsg(player2->sigueJugando(), player2->getPuntos());
+                    socket.send(tmsg, *other);
                 }
             }
             else{
                 TurnMessage tmsg;
                 if(socket.recv(tmsg) != 0)
                     return;
-                player2->setPlantado(tmsg.sePlanta);
+                player2->procesaTurnoMensaje(tmsg.sigue, tmsg.puntos);
                 player1->setTurno(player1->sigueJugando() && player2->getPuntos() <= 21);
                 player2->setTurno(!player1->sigueJugando());
             }
@@ -196,6 +213,7 @@ void Game::finDePartida()
     else
         ultimoGanador_ = 0;
 
+    indicesBaraja.clear();
     state_ = ROUNDEND;
 }
 
@@ -315,8 +333,7 @@ void Game::createGame()
     {
         std::cout << "7. " << msg.nombre << " ha solicitado conectarse.\n"; 
         std::cout << "Fuera: " << *clnt << std::endl;
-        std::unique_ptr<Socket> cl(clnt);
-        clients.push_back(std::move(cl));
+        other = clnt;
         player2->setName(msg.nombre);
         // Crea la partida
         std::cout << "8. El host inicializa su juego.\n";
@@ -359,6 +376,7 @@ void Game::receiveHostInfo()
     if(socket.recv(msg, host) == 0 && msg.type == PlayerMessage::ACCEPT)
     {
         std::cout << "8. Llega la confirmacion del host: inicilizando partida del cliente.\n";
+        other = host;
         player1->setName(msg.nombre);
         DeckMessage gmsg;
         if(socket.recv(gmsg, host) == 0 && gmsg.type == DeckMessage::START){
@@ -420,7 +438,10 @@ void TurnMessage::to_bin()
     memset(_data, 0, MESSAGE_SIZE);
     
     char* buffer = _data;
-    memcpy(buffer, &sePlanta, sizeof(bool));
+    memcpy(buffer, &sigue, sizeof(bool));
+    buffer += sizeof(bool);
+
+    memcpy(buffer, &puntos, sizeof(int));
 }
 
 int TurnMessage::from_bin(char * dt)
@@ -430,6 +451,9 @@ int TurnMessage::from_bin(char * dt)
 
     char * buffer = _data;
 
-    memcpy(&sePlanta, buffer, sizeof(bool));
+    memcpy(&sigue, buffer, sizeof(bool));
+    buffer += sizeof(bool);
+
+    memcpy(&puntos, buffer, sizeof(bool));
     return 0;
 }
