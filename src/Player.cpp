@@ -28,6 +28,7 @@ bool Player::procesaTurnoMensaje(bool sigue, int p)
     if(sigue || puntos != p)
     {
         pideCarta();
+        cout << puntos << " " << p << std::endl;
         //std::cout << "nova";
     }
     else 

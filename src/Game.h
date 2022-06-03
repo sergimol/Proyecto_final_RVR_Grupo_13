@@ -25,13 +25,13 @@ public:
 
     TurnMessage(){};
 
-    TurnMessage(bool s, int p) : sigue(s), puntos(p){};
+    TurnMessage(bool s, int16_t p) : sigue(s), puntos(p){};
 
     ~TurnMessage(){};
 
     bool sigue;
 
-    int puntos;
+    int16_t puntos;
 
     void to_bin() override;
 

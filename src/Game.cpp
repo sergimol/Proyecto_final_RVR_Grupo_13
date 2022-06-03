@@ -440,7 +440,7 @@ void TurnMessage::to_bin()
     char* buffer = _data;
     memcpy(buffer, &sigue, sizeof(bool));
     buffer += sizeof(bool);
-
+    
     memcpy(buffer, &puntos, sizeof(int));
 }
 
@@ -454,6 +454,6 @@ int TurnMessage::from_bin(char * dt)
     memcpy(&sigue, buffer, sizeof(bool));
     buffer += sizeof(bool);
 
-    memcpy(&puntos, buffer, sizeof(bool));
+    memcpy(&puntos, buffer, sizeof(int));
     return 0;
 }
